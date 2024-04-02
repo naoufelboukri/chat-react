@@ -6,17 +6,21 @@ import Button from "../../components/Button/Button.jsx";
 import AnimatedLogo from "../../components/AnimatedLogo/AnimatedLogo.jsx";
 import Alert from "../../components/Alert/Alert.jsx";
 import './Auth.css'
+import {useNavigate} from "react-router-dom";
+
+const wording = {
+    signIn: {word: 'Sign In', paragraph: "Log in to access your messaging.", router: "Don't have an account ? "},
+    signUp: {word: 'Sign Up', paragraph: "Sign up for secure Messaging.", router: "Already have an account ? "},
+}
 
 function Auth() {
-
-    const wording = {
-        signIn: {word: 'Sign In', paragraph: "Log in to access your messaging.", router: "Don't have an account ? "},
-        signUp: {word: 'Sign Up', paragraph: "Sign up for secure Messaging.", router: "Already have an account ? "},
-    }
-
+    const navigate = useNavigate();
     const [signIn, setSignIn] = useState(true);
-    const onSubmitHandler = () => {
+    const [errorMessage, setErrorMessage] = useState('');
 
+    const onSubmitHandler = (event) => {
+        event.preventDefault();
+        navigate('/messaging');
     }
 
     return (
@@ -29,9 +33,7 @@ function Auth() {
                     <p>{signIn ? wording.signIn.paragraph : wording.signUp.paragraph}</p>
                     <Input/>
                     <Input secure/>
-                    <Alert>
-                        Une erreur s'est produite
-                    </Alert>
+                    { errorMessage.length > 0 && <Alert>{errorMessage}</Alert>}
                     <Button>{signIn ? wording.signIn.word : wording.signUp.word}</Button>
                 </form>
                 <p className={'login-password-router'}>

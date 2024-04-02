@@ -1,8 +1,7 @@
-import logo from '../../assets/secure_msg.png';
 import './AnimatedLogo.css';
 const AnimatedLogo = () =>
     <div className="AnimatedLogo">
-        <img src={logo}/>
+        <img src={'/logo.png'}/>
         <h1>Securely Connect Now</h1>
     </div>
 
