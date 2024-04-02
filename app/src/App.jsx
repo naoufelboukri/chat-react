@@ -1,6 +1,6 @@
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 
-import Auth from "./containers/Auth/Auth.jsx"
+import Auth from "./pages/Auth/Auth.jsx"
 import Messaging from "./containers/Messaging/Messaging.jsx";
 import './App.css'
 

@@ -1,7 +1,8 @@
 import './Messaging.css';
+import Sidebar from "../Sidebar/Sidebar.jsx";
 const Messaging = () =>
     <div className="Messaging">
-        <h2>Messaging</h2>
+        <Sidebar/>
     </div>
 
 export default Messaging;
