@@ -36,11 +36,10 @@ function Login() {
 
     const onSubmitHandler = async (event) => {
         event.preventDefault();
-        console.log("submit", email, password);
         if (email !== '' || password !== '') {
             try {
                 await login(email, password);
-                
+
                 clearFields();
                 navigate("/messaging"); // Redirection vers la page Messaging après connexion
             } catch (error) {
