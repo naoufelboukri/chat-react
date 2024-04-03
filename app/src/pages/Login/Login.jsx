@@ -49,6 +49,8 @@ function Login() {
                 // Afficher le message d'erreur personnalisé à l'utilisateur
                 setErrorMessage(errorMessage);
             }
+        } else {
+            setErrorMessage("Please fill all fields correctly.");
         }
     }
 
