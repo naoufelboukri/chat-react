@@ -1,0 +1,21 @@
+.AnimatedLogo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 3rem;
+}
+
+span {
+    display: inline-block;
+}
+
+img {
+    width: 10rem;
+    margin-bottom: 1rem;
+}
+
+h1 {
+    overflow: hidden;
+    font-size: 2rem;
+    text-transform: uppercase;
+}
