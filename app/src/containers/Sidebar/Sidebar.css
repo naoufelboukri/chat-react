@@ -1,7 +1,6 @@
 aside {
     min-height: 100%;
-    background-color: rgba(6, 38, 83, 0.17);
-    min-width: 420px;
+    background-color: rgba(136, 178, 237, 0.17);
     padding: 2rem 1rem;
     position: fixed;
 }
@@ -27,6 +26,10 @@ aside {
     background-color: #747bff;
 }
 
+.close-collapser {
+    transform: rotateZ(180deg);
+}
+
 .sidebar-header {
     display: flex;
     flex-direction: row;
@@ -43,7 +46,7 @@ aside {
     display: flex;
     flex-direction: row;
     height: 100%;
-    gap: 10px;
+    gap: 2rem;
 }
 
 .sidebar-control {
@@ -69,7 +72,15 @@ aside {
 }
 
 .sidebar-content {
-    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.sidebar-content-messages {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
 }
 
 .active {

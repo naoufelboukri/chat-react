@@ -5,6 +5,7 @@ import {faUsers} from "@fortawesome/free-solid-svg-icons";
 import {faComments} from "@fortawesome/free-solid-svg-icons";
 
 import SearchBar from "../../components/SearchBar/SearchBar.jsx";
+import Message from "./Message/Message.jsx";
 import './Sidebar.css';
 
 const Sidebar = () => {
@@ -14,13 +15,13 @@ const Sidebar = () => {
 
     return (
         <aside>
-            <a className={'sidebar-collapser'} onClick={() => setIsClose(!isClose)}>
+            <a className={isClose ? 'sidebar-collapser close-collapser' : 'sidebar-collapser'} onClick={() => setIsClose(!isClose)}>
                 <FontAwesomeIcon icon={faAngleLeft}/>
             </a>
 
             <div className="sidebar-header">
                 <img src={'/logo.png'}/>
-                <h2>Messaging</h2>
+                <h2 className={isClose ? 'hidden' : ''}>Messaging</h2>
             </div>
 
             <div className="sidebar-main">
@@ -32,8 +33,15 @@ const Sidebar = () => {
                         <FontAwesomeIcon icon={faComments} size={'2x'}/>
                     </li>
                 </ul>
-                <div className="sidebar-content">
+                <div className='sidebar-content'>
                     <SearchBar/>
+                    <div className='sidebar-content-messages'>
+                        <Message/>
+                        <Message/>
+                        <Message/>
+                        <Message/>
+                        <Message/>
+                    </div>
                 </div>
             </div>
         </aside>

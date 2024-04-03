@@ -1,0 +1,9 @@
+.Message {
+    background-color: rgba(255, 255, 255);
+    padding: .5rem 1rem;
+    border-radius: .5rem;
+}
+
+.Message h3 {
+    color: #484848;
+}
