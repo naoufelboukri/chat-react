@@ -1,0 +1,20 @@
+.Control {
+    list-style: none;
+    text-align: center;
+    border-radius: 25%;
+    cursor: pointer;
+    transition: 200ms ease-in;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Control:hover {
+    background-color: rgba(116, 123, 255, 0.3);
+}
+
+.Control-active {
+    background-color: #747bff!important;
+}

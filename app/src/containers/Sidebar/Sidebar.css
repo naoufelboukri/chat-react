@@ -1,15 +1,16 @@
 aside {
-    min-height: 100%;
-    background-color: rgba(136, 178, 237, 0.17);
-    padding: 2rem 1rem;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: 100%;
     position: fixed;
 }
 
-.sidebar-collapser {
+.collapser {
     transition: left, right, .3s;
     position: absolute;
-    right: 0;
-    top: 50px;
+    right: -25px;
+    top: 35px;
     background-color: #535bf2;
     color: #fff;
     display: flex;
@@ -21,13 +22,30 @@ aside {
     height: 25px;
 }
 
-.sidebar-collapser:hover {
+.collapser:hover {
     color: #fff;
     background-color: #747bff;
 }
 
-.close-collapser {
+.collapser-close {
     transform: rotateZ(180deg);
+}
+
+.sidebar {
+    overflow: hidden;
+    background-color: rgba(136, 178, 237, 0.17);
+    height: 100%;
+    padding: 1rem 2rem 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+    width: 420px;
+    transition: width 100ms linear;
+}
+
+.sidebar-close {
+    width: 100px;
 }
 
 .sidebar-header {
@@ -35,54 +53,51 @@ aside {
     flex-direction: row;
     align-items: center;
     gap: 2rem;
-    margin: 0 0 4rem;
 }
 
 .sidebar-header img {
     width: 4rem;
+    margin: 0;
 }
 
 .sidebar-main {
+    flex: 1;
     display: flex;
     flex-direction: row;
-    height: 100%;
     gap: 2rem;
 }
 
-.sidebar-control {
+.sidebar-controls {
     display: flex;
     flex-direction: column;
     gap: 2rem;
 }
 
-.sidebar-control li {
-    list-style: none;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 25%;
-    cursor: pointer;
-    transition: 200ms ease-in;
-}
-
-.sidebar-control li:hover {
-    background-color: rgba(116, 123, 255, 0.3);
+.sidebar-controls svg {
+    width: 4rem;
 }
 
 .sidebar-content {
+    flex: 1;
+    min-width: 240px;
+}
+
+.sidebar-footer {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 2rem;
+    color: #b5b5b5;
 }
 
-.sidebar-content-messages {
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
+.sidebar-footer-close {
+    margin: auto;
 }
 
-.active {
-    background-color: #747bff!important;
+.sidebar-footer svg {
+    width: 4rem;
+}
+
+.sidebar-footer span {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-size: 1.2rem;
 }

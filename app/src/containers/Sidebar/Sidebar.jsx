@@ -1,12 +1,15 @@
 import {useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faAngleLeft} from "@fortawesome/free-solid-svg-icons";
+import {faAngleLeft, faRightFromBracket} from "@fortawesome/free-solid-svg-icons";
 import {faUsers} from "@fortawesome/free-solid-svg-icons";
 import {faComments} from "@fortawesome/free-solid-svg-icons";
 
-import SearchBar from "../../components/SearchBar/SearchBar.jsx";
-import Message from "./Message/Message.jsx";
+import Control from "./Control/Control.jsx";
+
 import './Sidebar.css';
+import Messages from "./Messages/Messages.jsx";
+import Users from "./Users/Users.jsx";
+import {Link} from "react-router-dom";
 
 const Sidebar = () => {
 
@@ -15,38 +18,34 @@ const Sidebar = () => {
 
     return (
         <aside>
-            <a className={isClose ? 'sidebar-collapser close-collapser' : 'sidebar-collapser'} onClick={() => setIsClose(!isClose)}>
+            <a className={isClose ? 'collapser collapser-close' : 'collapser'} onClick={() => setIsClose(!isClose)}>
                 <FontAwesomeIcon icon={faAngleLeft}/>
             </a>
 
-            <div className="sidebar-header">
-                <img src={'/logo.png'}/>
-                <h2 className={isClose ? 'hidden' : ''}>Messaging</h2>
-            </div>
+            <div className={isClose ? 'sidebar sidebar-close' : 'sidebar'}>
+                <div className="sidebar-header">
+                    <img src={'/logo.png'}/>
+                    <h2>Messaging</h2>
+                </div>
 
-            <div className="sidebar-main">
-                <ul className="sidebar-control">
-                    <li className={index === 0 ? 'sidebar-control-item active' : 'sidebar-control-item'} onClick={() => setIndex(0)}>
-                        <FontAwesomeIcon icon={faUsers} size={'2x'}/>
-                    </li>
-                    <li className={index === 1 ? 'sidebar-control-item active' : 'sidebar-control-item'} onClick={() => setIndex(1)}>
-                        <FontAwesomeIcon icon={faComments} size={'2x'}/>
-                    </li>
-                </ul>
-                <div className='sidebar-content'>
-                    <SearchBar/>
-                    <div className='sidebar-content-messages'>
-                        <Message/>
-                        <Message/>
-                        <Message/>
-                        <Message/>
-                        <Message/>
+                <div className="sidebar-main">
+                    <div className="sidebar-controls">
+                        <Control image={faComments} active={index === 0} setActive={() => setIndex(0)}/>
+                        <Control image={faUsers} active={index === 1} setActive={() => setIndex(1)}/>
+                    </div>
+                    <div className="sidebar-content">
+                        { index === 0 && <Messages/> }
+                        { index === 1 && <Users/> }
                     </div>
                 </div>
+
+                <Link to={'/'} className={isClose ? 'sidebar-footer sidebar-footer-close' : 'sidebar-footer'}>
+                    <FontAwesomeIcon icon={faRightFromBracket} size={'2x'}/>
+                    <span>Logout</span>
+                </Link>
             </div>
         </aside>
     )
 }
-
 
 export default Sidebar;

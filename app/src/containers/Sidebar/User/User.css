@@ -1,0 +1,10 @@
+.User {
+    text-align: center;
+    padding: .75rem;
+    background-color: rgba(6, 5, 67, 0.2);
+    border-radius: 4px;
+}
+
+.User h3 {
+    font-size: 15px;
+}
