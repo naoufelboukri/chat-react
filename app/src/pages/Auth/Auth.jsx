@@ -1,9 +1,8 @@
 import {useState} from "react";
 
-import Background from "../../components/Background/Background.jsx";
 import Input from "../../components/Input/Input.jsx";
 import Button from "../../components/Button/Button.jsx";
-import AnimatedLogo from "../../containers/AnimatedLogo/AnimatedLogo.jsx";
+import AnimatedLogo from "../../components/AnimatedLogo/AnimatedLogo.jsx";
 import Alert from "../../components/Alert/Alert.jsx";
 import './Auth.css'
 import {useNavigate} from "react-router-dom";
