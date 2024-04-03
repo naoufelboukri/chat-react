@@ -4,9 +4,15 @@ import App from './App.jsx'
 import './index.css'
 import Background from "./components/Background/Background.jsx";
 
+// Contexte de l'application
+import { AuthProvider } from './contexts/AuthContext'
+
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <Background/>
-        <App/>
+        <Background />
+        {/* Marche pas AuthProvider */}
+        <AuthProvider> 
+            <App />
+        </AuthProvider>
     </React.StrictMode>,
 )

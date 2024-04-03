@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import './MessagingTest.css';
 import io from 'socket.io-client';
 
@@ -29,6 +29,7 @@ const MessagingTest = () => {
       <div className="chat-input">
         <input type="text" placeholder="Tapez votre message..." />
         <button onClick={handleSendMessage}>Envoyer</button>
+        {{ currentUser }}
       </div>
     </div>
   );
