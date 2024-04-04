@@ -15,6 +15,7 @@ function Register() {
     const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = useState('');
     const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -23,6 +24,10 @@ function Register() {
 
     const handleEmailChange = (value) => {
         setEmail(value);
+    };
+
+    const handleUsernameChange = (value) => {
+        setUsername(value);
     };
 
     const handlePasswordChange = (value) => {
@@ -41,9 +46,9 @@ function Register() {
 
     const onSubmitHandler = async (event) => {
         event.preventDefault();
-        if (email !== '' && password !== '' && confirmPassword !== '' && password === confirmPassword) {
+        if (email !== '' && username != '' && password !== '' && confirmPassword !== '' && password === confirmPassword) {
             try {
-                await register(email, password);
+                await register(email, username, password);
                 clearFields();
                 navigate("/login"); // Redirection vers la page Messaging après connexion
             } catch (error) {
@@ -72,6 +77,16 @@ function Register() {
                             placeholder={'E-mail'}
                             value={email}
                             onChange={(e) => handleEmailChange(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="input">
+                        <FontAwesomeIcon icon={faUser} />
+                        <input
+                            type={'text'}
+                            placeholder={'Username'}
+                            value={username}
+                            onChange={(e) => handleUsernameChange(e.target.value)}
                         />
                     </div>
 

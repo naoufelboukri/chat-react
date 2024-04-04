@@ -1,21 +1,23 @@
 import { app, auth } from "../firebase/firebase"
-import { getFirestore, collection, setDoc } from "firebase/firestore"
+import { getFirestore, collection, setDoc, doc } from "firebase/firestore"
 
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth"
 
-export async function register(email, password, username) {
+export async function register(email, username, password) {
   return createUserWithEmailAndPassword(auth, email, password)
     .then((userCreated) => {
-      uid: userCreated.user.uid
+      const uid = userCreated.user.uid
       const firestore = getFirestore(app)
 
-      setDoc(collection(firestore, "users").id(uid), {
+
+      // Utilisez `doc` pour obtenir une référence à un document spécifique et `setDoc` pour créer ou mettre à jour
+      return setDoc(doc(firestore, "users", uid), {
         username: username,
         email: email,
-      })
+      });
     })
     .then(() => {
       console.log("Données utilisateur stockées avec succès !")
@@ -23,9 +25,6 @@ export async function register(email, password, username) {
     .catch((err) => {
       console.log("Erreur: ", err)
     })
-    .catch((err) => {
-      console.log("Erreur: ", err)
-    }) 
 }
 
 export async function login(email, password) {
