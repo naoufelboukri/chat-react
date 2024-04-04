@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import './Input.css';
 
-const Input = ({type, placeholder}) => {
+const Input = ({type, placeholder, fa}) => {
     const [passwordIsVisible, setPasswordIsVisible] = useState(false);
     const onEyeClickHandler = () => setPasswordIsVisible(!passwordIsVisible);
 
     return (
         <div className="input">
-            <FontAwesomeIcon icon={type === 'password' ? faLock : faUser} />
+            <FontAwesomeIcon icon={fa} />
             <input
                 type={type}
                 placeholder={placeholder}
