@@ -38,7 +38,8 @@ function Login() {
         event.preventDefault();
         if (email !== '' || password !== '') {
             try {
-                await login(email, password);
+                const response = await login(email, password);
+                console.log("response", response.user);
 
                 clearFields();
                 navigate("/messaging"); // Redirection vers la page Messaging après connexion
@@ -87,7 +88,7 @@ function Login() {
                     <Button>Sign In</Button>
                 </form>
                 <p className={'login-password-router'}>
-                    Don&apos;t have an account ?
+                    Don&apos;t have an account ? &nbsp;
                     <a href={'/register'}>
                         Sign Up
                     </a>

@@ -101,7 +101,7 @@ function Register() {
                     <Button>Sign Up</Button>
                 </form>
                 <p className={'login-password-router'}>
-                    Already have an account ?
+                    Already have an account ? &nbsp;
                     <a onClick={() => navigate("/login")}>
                         Sign In
                     </a>
