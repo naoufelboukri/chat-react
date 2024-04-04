@@ -22,7 +22,7 @@ export async function register(email, username, password) {
       // Rediriger l'utilisateur vers la page de messagerie
     })
     .catch((err) => {
-      console.log("Erreur: ", err)
+      console.error("Erreur: ", err)
     })
 }
 
