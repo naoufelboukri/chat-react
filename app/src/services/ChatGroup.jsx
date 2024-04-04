@@ -6,12 +6,17 @@ import {
   updateDoc,
   Timestamp,
   getDoc,
+  onSnapshot,
+  getDocs,
+  where,
+  query,
+  collection,
 } from "firebase/firestore"
 
 /**
  * Créer un salon de discussion
- * @param {*} name nom du groupe 
- * @param {*} username id du créateur du groupe
+ * @param {string} name nom du groupe
+ * @param {string} usernameId id du créateur du groupe
  * @param {string[]} memberIds id des membres du groupe
  */
 export async function createChatGroup(name, usernameId, memberIds) {
@@ -46,9 +51,25 @@ export async function createChatGroup(name, usernameId, memberIds) {
   }
 }
 
-export async function MemberChatGroupList() {
+/**
+ * 
+ * @returns les utilisateurs invitables
+ */
+export async function searchMembers() {
+  let usersData = []
   try {
     const firestore = getFirestore(app)
+    const request = await getDocs(collection(firestore, "users"))
+    request.forEach((doc) => {
+      usersData.push({
+        id: doc.id,
+        username: doc.data().username,
+        email: doc.data().email,
+      })
+      console.log(doc.id, " => ", doc.data())
+    })
+
+    return usersData;
   } catch (err) {
     console.error("Erreur: ", err)
   }
