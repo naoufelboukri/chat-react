@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 import { onAuthStateChanged } from 'firebase/auth';
-import ReactLoading from 'react-loading';
 
 // import Auth from "./pages/Auth/Auth.jsx"
 import Login from './pages/Login/Login.jsx';

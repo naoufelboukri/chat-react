@@ -7,25 +7,21 @@ import {
 } from "firebase/auth"
 
 export async function register(email, username, password) {
-  return createUserWithEmailAndPassword(auth, email, password)
-    .then((userCreated) => {
-      const uid = userCreated.user.uid
-      const firestore = getFirestore(app)
+  const firestore = getFirestore(); // Obtenez une référence au service Firestore
 
-      // Utilisez `doc` pour obtenir une référence à un document spécifique et `setDoc` pour créer ou mettre à jour
-      return setDoc(doc(firestore, "users", uid), {
-        username: username,
-        email: email,
-      });
-    })
-    .then(() => {
-      // Rediriger l'utilisateur vers la page de messagerie
-    })
-    .catch((err) => {
-      console.log("Erreur: ", err)
-    })
+  // Créez l'utilisateur avec l'email et le mot de passe
+  const userCreated = await createUserWithEmailAndPassword(auth, email, password);
+  const uid = userCreated.user.uid;
+
+  // Utilisez `doc` pour obtenir une référence à un document spécifique et `setDoc` pour créer ou mettre à jour
+  await setDoc(doc(firestore, "users", uid), {
+    username: username,
+    email: email,
+  });
+
+  // Si nécessaire, ajoutez plus de logique ici après la création de l'utilisateur et la mise à jour de Firestore
+  return userCreated;
 }
-
 export async function login(email, password) {
   return signInWithEmailAndPassword(auth, email, password)
 }

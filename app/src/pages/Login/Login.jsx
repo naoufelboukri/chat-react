@@ -6,6 +6,7 @@ import './Login.css'
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import ReactLoading from 'react-loading';
 
 // FIREBASE
 import { login } from '../../services/Auth';
@@ -17,6 +18,7 @@ function Login() {
     const [errorMessage, setErrorMessage] = useState('');
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const [passwordIsVisible, setPasswordIsVisible] = useState(false);
     const onEyeClickHandler = () => setPasswordIsVisible(!passwordIsVisible);
@@ -38,6 +40,7 @@ function Login() {
         event.preventDefault();
         if (email !== '' || password !== '') {
             try {
+                setLoading(true);
                 const response = await login(email, password);
                 console.log("response", response.user);
 
@@ -49,6 +52,9 @@ function Login() {
                 const errorMessage = getErrorMessage(error.code);
                 // Afficher le message d'erreur personnalisé à l'utilisateur
                 setErrorMessage(errorMessage);
+                setLoading(false);
+            } finally {
+                setLoading(false);
             }
         } else {
             setErrorMessage("Please fill all fields correctly.");
@@ -85,11 +91,13 @@ function Login() {
                     </div>
 
                     {errorMessage.length > 0 && <Alert>{errorMessage}</Alert>}
-                    <Button>Sign In</Button>
+                    <Button disabled={loading}>
+                        {loading ? <ReactLoading type="bars" color="#fff" height={40} width={40} /> : 'Sign In'}
+                    </Button>
                 </form>
                 <p className={'login-password-router'}>
                     Don&apos;t have an account ? &nbsp;
-                    <a href={'/register'}>
+                    <a onClick={() => navigate("/register")}>
                         Sign Up
                     </a>
                 </p>

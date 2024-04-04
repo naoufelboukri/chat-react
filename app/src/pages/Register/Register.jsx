@@ -6,6 +6,7 @@ import './Register.css'
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import ReactLoading from 'react-loading';
 
 // FIREBASE
 import { register } from '../../services/Auth';
@@ -18,6 +19,7 @@ function Register() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const [passwordIsVisible, setPasswordIsVisible] = useState(false);
     const onEyeClickHandler = () => setPasswordIsVisible(!passwordIsVisible);
@@ -48,14 +50,21 @@ function Register() {
         event.preventDefault();
         if (email !== '' && username != '' && password !== '' && confirmPassword !== '' && password === confirmPassword) {
             try {
-                await register(email, username, password, navigate);
-                clearFields();
-                navigate("/messaging"); // Redirection vers la page Messaging après connexion
+                setLoading(true);
+                const response = await register(email, username, password);
+                console.log("response", response);
+                if (response) {
+                    clearFields();
+                    navigate("/messaging"); // Redirection vers la page Messaging après connexion
+                }
             } catch (error) {
                 // Gérer les erreurs Firebase ici
                 const errorMessage = getErrorMessage(error.code);
                 // Afficher le message d'erreur personnalisé à l'utilisateur
                 setErrorMessage(errorMessage);
+                setLoading(false);
+            } finally {
+                setLoading(false);
             }
         } else {
             setErrorMessage("Please fill all fields correctly.");
@@ -113,7 +122,9 @@ function Register() {
                     </div>
 
                     {errorMessage.length > 0 && <Alert>{errorMessage}</Alert>}
-                    <Button>Sign Up</Button>
+                    <Button disabled={loading}>
+                        {loading ? <ReactLoading type="bars" color="#fff" height={40} width={40} /> : 'Sign Up'}
+                    </Button>
                 </form>
                 <p className={'login-password-router'}>
                     Already have an account ? &nbsp;
