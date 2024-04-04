@@ -1,0 +1,25 @@
+.createRoom {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.createRoom h3 {
+    margin-bottom: .5rem;
+}
+
+.createRoom .field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.createRoom .field label {
+    font-weight: 600;
+    color: #dedede;
+}
+
+.createRoom .field label span {
+    color: #ffaf4c;
+    margin-left: 3px;
+}

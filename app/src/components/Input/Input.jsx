@@ -3,25 +3,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import './Input.css';
 
-const Input = ({ secure, onChange }) => {
+const Input = ({type, placeholder}) => {
     const [passwordIsVisible, setPasswordIsVisible] = useState(false);
-
     const onEyeClickHandler = () => setPasswordIsVisible(!passwordIsVisible);
-
-    const handleInputChange = (event) => {
-        const value = event.target.value;
-        onChange(value);
-    };
 
     return (
         <div className="input">
-            <FontAwesomeIcon icon={secure ? faLock : faUser} />
+            <FontAwesomeIcon icon={type === 'password' ? faLock : faUser} />
             <input
-                type={secure && !passwordIsVisible ? 'password' : 'text'}
-                placeholder={secure ? 'Password' : 'E-mail'}
-                onChange={handleInputChange}
+                type={type}
+                placeholder={placeholder}
             />
-            {secure && (
+            {type === 'password' && (
                 <FontAwesomeIcon icon={passwordIsVisible ? faEyeSlash : faEye} onClick={onEyeClickHandler} />
             )}
         </div>

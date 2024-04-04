@@ -1,0 +1,26 @@
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #3f437f;
+    display: none;
+    min-width: 480px;
+}
+
+.modal-visible {
+    display: block;
+}
+
+.modal-content {
+    position: relative;
+    padding: 1.5rem 2rem;
+}
+
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #999aa4;
+    cursor: pointer;
+}
