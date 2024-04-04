@@ -48,9 +48,9 @@ function Register() {
         event.preventDefault();
         if (email !== '' && username != '' && password !== '' && confirmPassword !== '' && password === confirmPassword) {
             try {
-                await register(email, username, password);
+                await register(email, username, password, navigate);
                 clearFields();
-                navigate("/login"); // Redirection vers la page Messaging après connexion
+                navigate("/messaging"); // Redirection vers la page Messaging après connexion
             } catch (error) {
                 // Gérer les erreurs Firebase ici
                 const errorMessage = getErrorMessage(error.code);
