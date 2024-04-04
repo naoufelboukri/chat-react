@@ -8,12 +8,18 @@ import {
   getDoc,
 } from "firebase/firestore"
 
-export async function createChatRoom(name, username, memberIds) {
+/**
+ * Créer un salon de discussion
+ * @param {*} name nom du groupe 
+ * @param {*} username id du créateur du groupe
+ * @param {string[]} memberIds id des membres du groupe
+ */
+export async function createChatGroup(name, usernameId, memberIds) {
   try {
     const firestore = getFirestore(app)
     const group = await addDoc(doc(firestore, "group"), {
       name: name,
-      createdBy: username,
+      createdBy: usernameId,
       createdAt: new Timestamp(),
       members: memberIds,
     })
@@ -40,7 +46,7 @@ export async function createChatRoom(name, username, memberIds) {
   }
 }
 
-export async function MemberChatRoomList() {
+export async function MemberChatGroupList() {
   try {
     const firestore = getFirestore(app)
   } catch (err) {
