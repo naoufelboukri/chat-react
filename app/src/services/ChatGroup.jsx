@@ -52,7 +52,7 @@ export async function createChatGroup(name, usernameId, memberIds) {
 }
 
 /**
- * 
+ *
  * @returns les utilisateurs invitables
  */
 export async function searchMembers() {
@@ -69,8 +69,23 @@ export async function searchMembers() {
       console.log(doc.id, " => ", doc.data())
     })
 
-    return usersData;
+    return usersData
   } catch (err) {
     console.error("Erreur: ", err)
+    return null
+  }
+}
+
+export async function myGroupList(userId) {
+  try {
+    const firestore = getFirestore(app)
+    const user = await getDoc(firestore, "users", userId)
+
+    if (user.exists()) {
+      return user.data().groups
+    }
+  } catch (err) {
+    console.error("Erreur:", err)
+    return null
   }
 }
