@@ -5,7 +5,7 @@ import Alert from "../../components/Alert/Alert.jsx";
 import './Login.css'
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faLock, faEye, faEyeSlash, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import ReactLoading from 'react-loading';
 
 // FIREBASE
@@ -70,7 +70,7 @@ function Login() {
                     <p>Log in to access your messaging</p>
 
                     <div className="input">
-                        <FontAwesomeIcon icon={faUser} />
+                        <FontAwesomeIcon icon={faEnvelope} />
                         <input
                             type={'text'}
                             placeholder={'E-mail'}
