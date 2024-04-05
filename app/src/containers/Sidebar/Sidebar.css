@@ -3,13 +3,13 @@ aside {
     left: 0;
     bottom: 0;
     height: 100%;
-    position: fixed;
+    position: relative;
 }
 
 .collapser {
     transition: left, right, .3s;
     position: absolute;
-    right: -25px;
+    right: -30px;
     top: 35px;
     background-color: #535bf2;
     color: #fff;
@@ -20,6 +20,7 @@ aside {
     border-radius: 50%;
     width: 25px;
     height: 25px;
+    z-index: 5;
 }
 
 .collapser:hover {
