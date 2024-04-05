@@ -8,4 +8,9 @@
     background-color: #0d75e1;
     color: rgba(255, 255, 255, 0.87);
     cursor: pointer;
+    transition: 250ms;
+}
+
+.Button:hover {
+    background-color: #04305d;
 }
