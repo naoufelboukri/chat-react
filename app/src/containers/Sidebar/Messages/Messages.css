@@ -1,9 +1,0 @@
-.Messages {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.Messages button {
-    margin-bottom: 1rem;
-}
