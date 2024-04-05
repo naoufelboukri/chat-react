@@ -9,6 +9,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 22px;
+    font-weight: normal;
+    background-color: rgba(128, 128, 128, 0.37);
 }
 
 .Control:hover {
@@ -17,4 +20,8 @@
 
 .Control-active {
     background-color: #747bff!important;
+}
+
+.Control-button {
+    background-color: #095668;
 }

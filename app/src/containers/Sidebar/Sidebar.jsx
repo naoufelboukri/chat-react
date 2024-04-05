@@ -1,23 +1,26 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import { faUsers } from "@fortawesome/free-solid-svg-icons";
-import { faComments } from "@fortawesome/free-solid-svg-icons";
+import {faAngleLeft, faPlus, faRightFromBracket} from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 import Control from "./Control/Control.jsx";
-
-import './Sidebar.css';
-import Messages from "./Messages/Messages.jsx";
-import Users from "./Users/Users.jsx";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "../../services/Auth.jsx"
+import Modal from "../Modal/Modal.jsx";
+import CreateRoom from "../CreateRoom/CreateRoom.jsx";
+import './Sidebar.css';
+
+const mock_rooms = [
+    {name: 'Naoufel', by: 'naoufel'},
+    {name: 'Abdou', by: 'abdou'},
+];
 
 const Sidebar = () => {
 
+    const navigate = useNavigate();
     const [isClose, setIsClose] = useState(true);
     const [index, setIndex] = useState(0);
-    const navigate = useNavigate();
+    const [modalIsVisible, setModalIsVisible] = useState(false);
 
     const handleLogout = async () => {
         try {
@@ -30,35 +33,41 @@ const Sidebar = () => {
         }
     };
 
+    const rooms = mock_rooms.map((room, i) => <Control room={room} active={index === i} setActive={() => setIndex(i)} key={i}/>);
+
     return (
-        <aside>
-            <a className={isClose ? 'collapser collapser-close' : 'collapser'} onClick={() => setIsClose(!isClose)}>
-                <FontAwesomeIcon icon={faAngleLeft} />
-            </a>
+        <>
+            <Modal container={CreateRoom} isVisible={modalIsVisible} close={() => setModalIsVisible(false)}/>
+            <aside>
+                <a className={isClose ? 'collapser collapser-close' : 'collapser'} onClick={() => setIsClose(!isClose)}>
+                    <FontAwesomeIcon icon={faAngleLeft} />
+                </a>
 
-            <div className={isClose ? 'sidebar sidebar-close' : 'sidebar'}>
-                <div className="sidebar-header">
-                    <img src={'/logo.png'} />
-                    <h2>Messaging</h2>
-                </div>
-
-                <div className="sidebar-main">
-                    <div className="sidebar-controls">
-                        <Control image={faComments} active={index === 0} setActive={() => setIndex(0)} />
-                        <Control image={faUsers} active={index === 1} setActive={() => setIndex(1)} />
+                <div className={isClose ? 'sidebar sidebar-close' : 'sidebar'}>
+                    <div className="sidebar-header">
+                        <img src={'/logo.png'} />
+                        <h2>Messaging</h2>
                     </div>
-                    <div className="sidebar-content">
-                        {index === 0 && <Messages />}
-                        {index === 1 && <Users />}
-                    </div>
-                </div>
 
-                <Link className={isClose ? 'sidebar-footer sidebar-footer-close' : 'sidebar-footer'} onClick={handleLogout}>
-                    <FontAwesomeIcon icon={faRightFromBracket} size={'2x'} />
-                    <span>Logout</span>
-                </Link>
-            </div>
-        </aside>
+                    <div className="sidebar-main">
+                        <div className="sidebar-controls">
+                            {rooms}
+                            <li className="Control Control-button" onClick={() => setModalIsVisible(true)}>
+                                <FontAwesomeIcon icon={faPlus}/>
+                            </li>
+                        </div>
+                        <div className="sidebar-content">
+
+                        </div>
+                    </div>
+
+                    <Link className={isClose ? 'sidebar-footer sidebar-footer-close' : 'sidebar-footer'} onClick={handleLogout}>
+                        <FontAwesomeIcon icon={faRightFromBracket} size={'2x'} />
+                        <span>Logout</span>
+                    </Link>
+                </div>
+            </aside>
+        </>
     )
 }
 

@@ -10,7 +10,7 @@
     transform: translate(-50%, -50%);
 }
 
-form {
+.login form {
     padding: 3rem 4rem;
     border-radius: 14px;
     background-color: rgba(54, 54, 54, 0.28);

@@ -1,12 +1,13 @@
 import { useState } from "react";
-import Button from "../../components/Button/Button.jsx";
-import AnimatedLogo from "../../components/AnimatedLogo/AnimatedLogo.jsx";
-import Alert from "../../components/Alert/Alert.jsx";
-import './Register.css'
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock, faEye, faEyeSlash, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import ReactLoading from 'react-loading';
+
+import Button from "../../components/Button/Button.jsx";
+import AnimatedLogo from "../../components/AnimatedLogo/AnimatedLogo.jsx";
+import Alert from "../../components/Alert/Alert.jsx";
+import './Register.css'
 
 // FIREBASE
 import { register } from '../../services/Auth';

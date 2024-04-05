@@ -1,4 +1,4 @@
-.input {
+#chip {
     width: 100%;
     border: 2px solid grey;
     border-radius: 6px;
@@ -7,14 +7,4 @@
     align-items: center;
     justify-content: flex-start;
     padding: 0 .5em;
-}
-
-.input input {
-    background: none;
-    border: none;
-    height: 100%;
-    flex: 1;
-    padding: .75em 1em;
-    color: #fff;
-    outline: none;
 }
