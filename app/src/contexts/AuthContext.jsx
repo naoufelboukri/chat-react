@@ -1,39 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { auth } from '../firebase/firebase';
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useContext, useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase/firebase.js';
 
-const AuthContext = React.createContext();
+// Créer le contexte d'authentification
+const AuthContext = createContext();
 
-export function AuthProvider({ children }) {
-    const [currentUser, setCurrentUser] = useState();
-    const [userLoggingIn, setUserLoggingIn] = useState(true);
-    const [loading, setLoading] = useState(true);
+// Utiliser ce hook pour accéder au contexte d'authentification
+export const useAuth = () => useContext(AuthContext);
+
+// Provider qui gère l'état d'authentification
+export const AuthProvider = ({ children }) => {
+    const [currentUser, setCurrentUser] = useState(null);
+    const [isFetching, setIsFetching] = useState(true);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, initializeUser);
-        return () => unsubscribe(); // Unsubscribe from the auth state change listener when the component unmounts
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setCurrentUser(user);
+            setIsFetching(false);
+        });
+
+        return () => unsubscribe();
     }, []);
 
-    async function initializeUser(user) {
-        if (user) {
-            setCurrentUser({ ...user });
-            setUserLoggingIn(true);
-        } else {
-            setCurrentUser(null);
-            setUserLoggingIn(false);
-        }
-        setLoading(false);
-    }
-
-    const value = {
-        currentUser,
-        userLoggingIn,
-        loading,
-    };
-
     return (
-        <AuthContext.Provider value={value}>
-            {!loading && children}
+        <AuthContext.Provider value={{ currentUser, isFetching }}>
+            {!isFetching && children}
         </AuthContext.Provider>
     );
-}
+};

@@ -4,10 +4,13 @@ import Input from "../../components/Input/Input.jsx";
 import SelectMultiple from "../../components/SelectMultiple/SelectMultiple.jsx";
 import './CreateRoom.css';
 import Button from "../../components/Button/Button.jsx";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 
 // Service firebase
 import { createChatGroup } from "../../services/ChatGroup.jsx";
+
+// Context
+import { useAuth } from "../../contexts/AuthContext.jsx";
 
 const names = [
     'Oliver Hansen',
@@ -22,10 +25,12 @@ const names = [
     'Kelly Snyder',
 ];
 
-const CreateRoom = ({ user }) => {
+const CreateRoom = () => {
 
     const [roomName, setRoomName] = useState('');
     const [users, setUsers] = useState([]);
+
+    const { currentUser, isFetching } = useAuth();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -33,7 +38,7 @@ const CreateRoom = ({ user }) => {
         console.log(users);
         try {
             if (roomName !== '') {
-                const response = await createChatGroup(roomName, user.uid, users);
+                const response = await createChatGroup(roomName, currentUser.uid, users);
 
                 console.log(response);
             }
@@ -41,6 +46,10 @@ const CreateRoom = ({ user }) => {
             console.error("Error creating a room:", error);
         }
     }
+
+    useEffect(() => {
+        console.log("currentUser: ", currentUser.uid);
+    }, [currentUser]);
 
     return (
         <form className="createRoom" onSubmit={handleSubmit}>
