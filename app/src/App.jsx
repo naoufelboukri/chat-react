@@ -43,7 +43,7 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path={'/messaging'} element={
                     <ProtectedRoute user={user}>
-                        <Messaging />
+                        <Messaging user={user} />
                     </ProtectedRoute>
                 } />
                 <Route path={'/messagingTest'} element={<MessagingTest />} />

@@ -4,12 +4,9 @@ import {
   doc,
   addDoc,
   updateDoc,
-  Timestamp,
   getDoc,
   onSnapshot,
   getDocs,
-  where,
-  query,
   collection,
 } from "firebase/firestore"
 
@@ -21,13 +18,14 @@ import {
  */
 export async function createChatGroup(name, usernameId, memberIds) {
   try {
-    const firestore = getFirestore(app)
-    const group = await addDoc(doc(firestore, "group"), {
+    const firestore = getFirestore()
+
+    const group = await addDoc(collection(firestore, "groups"), {
       name: name,
       createdBy: usernameId,
-      createdAt: new Timestamp(),
+      createdAt: new Date(),
       members: memberIds,
-    })
+    });
 
     const groupId = group.id
 
