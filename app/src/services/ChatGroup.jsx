@@ -5,7 +5,6 @@ import {
   addDoc,
   updateDoc,
   getDoc,
-  onSnapshot,
   getDocs,
   collection,
 } from "firebase/firestore"
@@ -74,13 +73,29 @@ export async function searchMembers() {
   }
 }
 
+/**
+ * Renvoi une liste de groupes de discussion de l'utilisateur
+ * @param {string} userId id de l'utilisateur
+ * @returns la liste des groupes
+ */
 export async function myGroupList(userId) {
+  let groupList = []
   try {
     const firestore = getFirestore(app)
     const user = await getDoc(firestore, "users", userId)
 
     if (user.exists()) {
-      return user.data().groups
+      const userGroups = user.data().groups
+
+      await Promise.all(
+        userGroups.map(async (groupId) => {
+          const groupDoc = await getDoc(doc(firestore, "group", groupId))
+          if (groupDoc.exists()) {
+            groupList.push(groupDoc.data())
+          }
+        })
+      )
+      return groupList
     }
   } catch (err) {
     console.error("Erreur:", err)
