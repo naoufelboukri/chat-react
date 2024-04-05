@@ -1,13 +1,43 @@
+import {useEffect, useRef, useState} from "react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPaperPlane} from "@fortawesome/free-solid-svg-icons";
+
 import Message from "../../components/Message/Message.jsx";
 
 import './Chat.css';
-import Button from "../../components/Button/Button.jsx";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPaperPlane} from "@fortawesome/free-solid-svg-icons";
+
+const mock_messages = [
+    {content: 'On doit prendre le train a 8h00', from: 'Hugues', time: '11:43'},
+    {content: 'Non je dois aller chez le medecin en faite', time: '11:44'},
+    {content: 'Ah mewde, bon pas grave on se voit lundi', from: 'Hugues', time: '11:47'},
+    {content: 'Aller vous faire f****', from: 'Jiong', time: '11:49'},
+    {content: 'wsh', time: '13:21'},
+]
+
 const Chat = () => {
+
+    const [message, setMessage] = useState('');
+    const [chat, setChat] = useState(mock_messages);
+
+    const messages = chat.map((message, index) => <Message from={message.from} time={message.time} key={index}>{message.content}</Message>);
+
+    const textareaRef = useRef(null);
+    const hiddenTargetRef = useRef(null);
+    const formRef = useRef(null);
 
     const sendMessage = (event) => {
         event.preventDefault();
+        setChat([...chat, {content: message, time: 'now'}]);
+        setMessage('');
+        textareaRef.current.value = '';
+    }
+
+    useEffect(() => {
+        hiddenTargetRef.current.scrollIntoView({behavior: 'smooth'});
+    }, [chat]);
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter' && !event.shiftKey) sendMessage(event)
     }
 
     return (
@@ -16,18 +46,19 @@ const Chat = () => {
                 <h4>ETNA</h4>
             </div>
             <div className="chat-main">
-                <Message from={'Abdou'} time={'11h34'}>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit ipsam molestias mollitia, nemo porro quaerat ratione saepe sit tenetur vitae? A commodi doloremque sunt!
-                </Message>
-                <Message time={'11h36'}>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum, natus nemo nisi nulla officia recusandae tempore.
-                </Message>
-                <Message from={'Jiong'} time={'12h21'}>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquam animi, consequuntur debitis error et explicabo ipsam, ipsum iusto mollitia natus nisi nobis, odio repellendus repudiandae sapiente soluta vitae voluptatibus!
-                </Message>
+                {messages}
+                <div id={'chat-target'} ref={hiddenTargetRef}/>
             </div>
-            <form className="chat-footer" onSubmit={sendMessage}>
-                <textarea name="chat-input" placeholder={'Enter your message'}></textarea>
+            <form className="chat-footer" onSubmit={sendMessage} ref={formRef} action={''}>
+                <textarea
+                    name="chat-input"
+                    placeholder={'Enter your message'}
+                    onChange={e => setMessage(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    ref={textareaRef}
+                >
+                    {message}
+                </textarea>
                 <button type="submit">
                     <FontAwesomeIcon icon={faPaperPlane}/>
                 </button>
