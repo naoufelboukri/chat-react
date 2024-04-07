@@ -1,43 +1,44 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faAngleLeft, faPlus, faRightFromBracket} from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { faAngleLeft, faPlus, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { Link, useNavigate } from "react-router-dom";
 
 import Control from "./Control/Control.jsx";
-import { useNavigate } from "react-router-dom";
 import { signOut } from "../../services/Auth.jsx"
 import Modal from "../Modal/Modal.jsx";
 import CreateRoom from "../CreateRoom/CreateRoom.jsx";
 import './Sidebar.css';
 
-const mock_rooms = [
-    {name: 'Naoufel', by: 'naoufel'},
-    {name: 'Abdou', by: 'abdou'},
-];
-
-const Sidebar = () => {
-
+const Sidebar = ({ groups }) => {
     const navigate = useNavigate();
     const [isClose, setIsClose] = useState(true);
-    const [index, setIndex] = useState(0);
+    const [index, setIndex] = useState(0); // Index du groupe actif
     const [modalIsVisible, setModalIsVisible] = useState(false);
 
     const handleLogout = async () => {
         try {
             await signOut(); // Appelle la fonction signOut importée
-            navigate("/login")
-            // Rediriger l'utilisateur après la déconnexion, si nécessaire
-            // par exemple: history.push('/login');
+            navigate("/login");
         } catch (error) {
             console.error("Erreur lors de la déconnexion:", error);
         }
     };
 
-    const rooms = mock_rooms.map((room, i) => <Control room={room} active={index === i} setActive={() => setIndex(i)} key={i}/>);
+    // Utilisez l'état 'index' pour déterminer quel groupe est actuellement sélectionné
+    const activeGroup = groups[index];
+
+    const rooms = groups.map((group, i) => (
+        <Control
+            room={{ name: group.name, by: group.createdBy }} // Adaptez selon la structure de vos données
+            active={index === i}
+            setActive={() => setIndex(i)}
+            key={i}
+        />
+    ));
 
     return (
         <>
-            <Modal container={CreateRoom} isVisible={modalIsVisible} close={() => setModalIsVisible(false)}/>
+            <Modal container={CreateRoom} isVisible={modalIsVisible} close={() => setModalIsVisible(false)} />
             <aside>
                 <a className={isClose ? 'collapser collapser-close' : 'collapser'} onClick={() => setIsClose(!isClose)}>
                     <FontAwesomeIcon icon={faAngleLeft} />
@@ -45,7 +46,7 @@ const Sidebar = () => {
 
                 <div className={isClose ? 'sidebar sidebar-close' : 'sidebar'}>
                     <div className="sidebar-header">
-                        <img src={'/logo.png'} />
+                        <img src={'/logo.png'} alt="Logo" />
                         <h2>Messaging</h2>
                     </div>
 
@@ -53,22 +54,29 @@ const Sidebar = () => {
                         <div className="sidebar-controls">
                             {rooms}
                             <li className="Control Control-button" onClick={() => setModalIsVisible(true)}>
-                                <FontAwesomeIcon icon={faPlus}/>
+                                <FontAwesomeIcon icon={faPlus} />
                             </li>
                         </div>
                         <div className="sidebar-content">
-
+                            {/* Affichez ici les informations du groupe actif */}
+                            {activeGroup && (
+                                <div>
+                                    <h3>{activeGroup.name}</h3>
+                                    <p>Créé par: {activeGroup.createdBy}</p>
+                                    {/* Ajoutez d'autres détails du groupe ici si nécessaire */}
+                                </div>
+                            )}
                         </div>
                     </div>
 
-                    <Link className={isClose ? 'sidebar-footer sidebar-footer-close' : 'sidebar-footer'} onClick={handleLogout}>
+                    <Link to="/login" className={isClose ? 'sidebar-footer sidebar-footer-close' : 'sidebar-footer'} onClick={handleLogout}>
                         <FontAwesomeIcon icon={faRightFromBracket} size={'2x'} />
                         <span>Logout</span>
                     </Link>
                 </div>
             </aside>
         </>
-    )
+    );
 }
 
 export default Sidebar;
