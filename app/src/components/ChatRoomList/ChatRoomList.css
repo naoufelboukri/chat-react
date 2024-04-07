@@ -20,10 +20,10 @@
 
 .chat-room-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: space-between; /* Répartit les éléments entre eux */
+    align-items: center; /* Centre les éléments verticalement */
     cursor: pointer;
-    margin-bottom: 5px;
+    width: 100%; /* Assurez-vous que le header prend toute la largeur disponible */
 }
 
 .chat-room-items {
@@ -74,11 +74,15 @@
     /* Ajoutez ici d'autres styles pour le nom si nécessaire */
 }
 
+.chat-room-header-content {
+    display: flex;
+    align-items: center; /* Centre les éléments (chevron et texte) verticalement */
+}
+
 
 .chat-room-name {
     flex-grow: 1;
 }
-
 
 .chat-room-header .fa-icon {
     transition: transform 0.3s ease;
@@ -89,5 +93,5 @@
 }
 
 .chat-room-header .fa-chevron-right {
-    transform: rotate(-90deg);
+    transform: rotate(0deg);
 }

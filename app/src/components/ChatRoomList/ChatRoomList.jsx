@@ -2,17 +2,23 @@ import React, { useState } from 'react';
 import './ChatRoomList.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import Tooltip from '@mui/material/Tooltip'; // Importer Tooltip de MUI
+import IconButton from '@mui/material/IconButton'; // Importer IconButton de MUI
+import AddIcon from '@mui/icons-material/Add'; // Importer AddIcon de MUI
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; // Chevron vers le bas
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'; // Chevron vers la droite
+
 
 const ChatRoomList = ({ groupName, rooms, people }) => {
-    const [isRoomsExpanded, setIsRoomsExpanded] = useState(true);
     const [isPeopleExpanded, setIsPeopleExpanded] = useState(true);
-
-    const toggleRoomsList = () => {
-        setIsRoomsExpanded(!isRoomsExpanded);
-    };
+    const [isRoomsExpanded, setIsRoomsExpanded] = useState(true);
 
     const togglePeopleList = () => {
         setIsPeopleExpanded(!isPeopleExpanded);
+    };
+
+    const toggleRoomsList = () => {
+        setIsRoomsExpanded(!isRoomsExpanded);
     };
 
     return (
@@ -21,9 +27,34 @@ const ChatRoomList = ({ groupName, rooms, people }) => {
 
             {/* Section pour les personnes */}
             <div className="chat-room-header" onClick={togglePeopleList}>
-                <span>People 👤 {people.length}</span>
-                <FontAwesomeIcon icon={isPeopleExpanded ? faChevronDown : faChevronRight} />
+                <div className="chat-room-header-content"> {/* Conteneur pour le chevron et le texte */}
+                    {/* Chevron icon */}
+                    {isPeopleExpanded ? <ExpandMoreIcon style={{ color: 'white' }} /> : <ChevronRightIcon style={{ color: 'white' }} />}
+                    &nbsp; {/* Text and count */}
+                    <span>People 👤 {people.length}</span>
+                </div>
+                {/* Button "+" avec Tooltip à droite */}
+                <Tooltip title="Ajouter une salle">
+                    <IconButton
+                        className="add-people-btn"
+                        onClick={(e) => {
+                            e.stopPropagation(); // Empêche toggleRoomsList lors du clic sur le bouton
+                            console.log("Ajouter une salle");
+                        }}
+                        size="large"
+                        sx={{
+                            color: 'white', // Couleur de l'icône
+                            '&:hover': {
+                                backgroundColor: 'rgba(255, 255, 255, 0.2)', // Couleur de fond au survol
+                            },
+                        }}
+                    >
+                        <AddIcon style={{ color: 'white' }} />
+                    </IconButton>
+                </Tooltip>
             </div>
+
+
             {isPeopleExpanded && people && people.length > 0 && (
                 <ul className="chat-room-items">
                     {people.map((person, index) => (
@@ -39,8 +70,28 @@ const ChatRoomList = ({ groupName, rooms, people }) => {
 
             {/* Section pour les salles */}
             <div className="chat-room-header" onClick={toggleRoomsList}>
-                <span>Rooms</span>
-                <FontAwesomeIcon icon={isRoomsExpanded ? faChevronDown : faChevronRight} />
+                <div className="chat-room-header-content">
+                    {isRoomsExpanded ? <ExpandMoreIcon style={{ color: 'white' }} /> : <ChevronRightIcon style={{ color: 'white' }} />}
+                    &nbsp;
+                    <span>Rooms</span>
+                </div>
+                <Tooltip title="Ajouter une salle">
+                    <IconButton
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            console.log("Ajouter une salle");
+                        }}
+                        size="large"
+                        sx={{
+                            color: 'white', // Couleur de l'icône
+                            '&:hover': {
+                                backgroundColor: 'rgba(255, 255, 255, 0.2)', // Couleur de fond au survol
+                            },
+                        }}
+                    >
+                        <AddIcon style={{ color: 'white' }} />
+                    </IconButton>
+                </Tooltip>
             </div>
             {isRoomsExpanded && rooms && rooms.length > 0 && (
                 <ul className="chat-room-items">
