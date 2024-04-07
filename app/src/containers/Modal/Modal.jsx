@@ -6,7 +6,7 @@ const Modal = ({container: Container, isVisible, close}) =>
         <div className={'modal'}>
             <div className="modal-content">
                 <FontAwesomeIcon icon={faXmark} className={'modal-close'} onClick={close}/>
-                <Container/>
+                <Container closeModal={close}/> {/* Pass closeModal as a prop */}
             </div>
         </div>
     </div>

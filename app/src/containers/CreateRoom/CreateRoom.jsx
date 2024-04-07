@@ -4,7 +4,7 @@ import Input from "../../components/Input/Input.jsx";
 import SelectMultiple from "../../components/SelectMultiple/SelectMultiple.jsx";
 import './CreateRoom.css';
 import Button from "../../components/Button/Button.jsx";
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 // Service firebase
 import { createChatGroup } from "../../services/ChatGroup.jsx";
@@ -12,35 +12,33 @@ import { createChatGroup } from "../../services/ChatGroup.jsx";
 // Context
 import { useAuth } from "../../contexts/AuthContext.jsx";
 
-const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder',
-];
+// const names = [
+//     'Oliver Hansen',
+//     'Van Henry',
+//     'April Tucker',
+//     'Ralph Hubbard',
+//     'Omar Alexander',
+//     'Carlos Abbott',
+//     'Miriam Wagner',
+//     'Bradley Wilkerson',
+//     'Virginia Andrews',
+//     'Kelly Snyder',
+// ];
 
-const CreateRoom = () => {
+const CreateRoom = ({ closeModal }) => {
 
     const [roomName, setRoomName] = useState('');
     const [users, setUsers] = useState([]);
 
-    const { currentUser, isFetching } = useAuth();
+    const { currentUser } = useAuth();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(roomName);
-        console.log(users);
         try {
             if (roomName !== '') {
-                const response = await createChatGroup(roomName, currentUser.uid, users);
-
-                console.log(response);
+                await createChatGroup(roomName, currentUser.uid, users);
+                setRoomName('');
+                closeModal();
             }
         } catch (error) {
             console.error("Error creating a room:", error);
@@ -66,13 +64,13 @@ const CreateRoom = () => {
                 />
             </div>
 
-            <div className="field">
+            {/* <div className="field">
                 <SelectMultiple
                     values={names}
                     selectedValues={users}
                     set={selectedValues => setUsers(selectedValues)}
                 />
-            </div>
+            </div> */}
 
             <Button>Create a room</Button>
         </form>
