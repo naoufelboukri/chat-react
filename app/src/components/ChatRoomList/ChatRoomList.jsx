@@ -6,8 +6,13 @@ import AddIcon from '@mui/icons-material/Add'; // Importer AddIcon de MUI
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; // Chevron vers le bas
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'; // Chevron vers la droite
 
+import AddPeopleDialog from '../AddPeopleDialog/AddPeopleDialog'; // Importer le composant AddPeopleDialog
+
 
 const ChatRoomList = ({ groupName, rooms, people }) => {
+
+    const [openDialog, setOpenDialog] = useState(false);
+
     const [isPeopleExpanded, setIsPeopleExpanded] = useState(true);
     const [isRoomsExpanded, setIsRoomsExpanded] = useState(true);
 
@@ -19,13 +24,29 @@ const ChatRoomList = ({ groupName, rooms, people }) => {
         setIsRoomsExpanded(!isRoomsExpanded);
     };
 
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    };
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
+
+    const users = [
+        { name: 'John Doe', id: 1 },
+        { name: 'Jane Doe', id: 2 },
+        // Ajoutez plus d'utilisateurs ici...
+    ];
+
+
+
     return (
         <div className="chat-room-list">
             {groupName && <div className="chat-room-group-name">{groupName}</div>}
 
             {/* Section pour les personnes */}
-            <div className="chat-room-header" onClick={togglePeopleList}>
-                <div className="chat-room-header-content"> {/* Conteneur pour le chevron et le texte */}
+            <div className="chat-room-header">
+                <div className="chat-room-header-content" onClick={togglePeopleList}> {/* Conteneur pour le chevron et le texte */}
                     {/* Chevron icon */}
                     {isPeopleExpanded ? <ExpandMoreIcon style={{ color: 'white' }} /> : <ChevronRightIcon style={{ color: 'white' }} />}
                     &nbsp; {/* Text and count */}
@@ -35,10 +56,7 @@ const ChatRoomList = ({ groupName, rooms, people }) => {
                 <Tooltip title="Add people">
                     <IconButton
                         className="add-people-btn"
-                        onClick={(e) => {
-                            e.stopPropagation(); // Empêche toggleRoomsList lors du clic sur le bouton
-                            console.log("Add people");
-                        }}
+                        onClick={handleOpenDialog} // Ouvre le dialogue
                         size="large"
                         sx={{
                             color: 'white', // Couleur de l'icône
@@ -50,6 +68,12 @@ const ChatRoomList = ({ groupName, rooms, people }) => {
                         <AddIcon style={{ color: 'white' }} />
                     </IconButton>
                 </Tooltip>
+
+                <AddPeopleDialog
+                    open={openDialog}
+                    handleClose={handleCloseDialog}
+                    users={users}
+                />
             </div>
 
 
@@ -68,8 +92,8 @@ const ChatRoomList = ({ groupName, rooms, people }) => {
 
 
             {/* Section pour les salles */}
-            <div className="chat-room-header" onClick={toggleRoomsList}>
-                <div className="chat-room-header-content">
+            <div className="chat-room-header" >
+                <div className="chat-room-header-content" onClick={toggleRoomsList}>
                     {isRoomsExpanded ? <ExpandMoreIcon style={{ color: 'white' }} /> : <ChevronRightIcon style={{ color: 'white' }} />}
                     &nbsp;
                     <span>Rooms</span>

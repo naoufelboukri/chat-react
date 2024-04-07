@@ -1,6 +1,5 @@
 import { app, auth } from "../firebase/firebase"
-import { getFirestore, setDoc, doc } from "firebase/firestore"
-
+import { getFirestore, setDoc, doc, collection, query, where, getDocs } from "firebase/firestore"
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -8,6 +7,12 @@ import {
 } from "firebase/auth"
 
 export async function register(email, username, password) {
+
+  const exists = await usernameExists(username);
+  if (exists) {
+    throw new Error("Username is already taken.");
+  }
+
   const firestore = getFirestore(); // Obtenez une référence au service Firestore
 
   // Créez l'utilisateur avec l'email et le mot de passe
@@ -18,6 +23,7 @@ export async function register(email, username, password) {
   await setDoc(doc(firestore, "users", uid), {
     username: username,
     email: email,
+    uid: uid,
   });
 
   // Mise à jour du displayName dans le profil utilisateur
@@ -29,10 +35,19 @@ export async function register(email, username, password) {
   // Si nécessaire, ajoutez plus de logique ici après la création de l'utilisateur et la mise à jour de Firestore
   return userCreated;
 }
+
 export async function login(email, password) {
   return signInWithEmailAndPassword(auth, email, password)
 }
 
 export async function signOut() {
   return auth.signOut()
+}
+
+async function usernameExists(username) {
+  const firestore = getFirestore();
+  const usersRef = collection(firestore, "users");
+  const q = query(usersRef, where("username", "==", username));
+  const querySnapshot = await getDocs(q);
+  return !querySnapshot.empty; // Retourne true si le username existe déjà
 }

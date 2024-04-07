@@ -123,3 +123,36 @@ export function listenForGroupsByUserId(userId, setGroups) {
   // Retournez la fonction de désinscription pour pouvoir arrêter l'écoute
   return unsubscribe;
 }
+
+
+export async function searchUsersByPseudo(pseudoText) {
+  const firestore = getFirestore(app); // Obtient une référence à la base de données Firestore
+  let usersData = [];
+
+  // Prépare une requête pour trouver des utilisateurs dont le pseudo contient le texte saisi.
+  // Note : Firebase Firestore n'a pas de recherche native "contient" pour les chaînes de caractères.
+  // Cette requête recherche exactement le texte saisi. Pour une recherche "commence par",
+  // vous pouvez utiliser les expressions `>=` et `<` sur des chaînes.
+  const pseudoQuery = query(
+    collection(firestore, "users"),
+    where("username", ">=", pseudoText),
+    where("username", "<=", pseudoText + '\uf8ff')
+  );
+
+  try {
+    const querySnapshot = await getDocs(pseudoQuery);
+    querySnapshot.forEach((doc) => {
+      usersData.push({
+        id: doc.id,
+        name: doc.data().username, // ou 'name' en fonction du champ que vous utilisez dans Firestore
+        email: doc.data().email,
+      });
+    });
+
+    console.log("Utilisateurs trouvés:", usersData);
+    return usersData;
+  } catch (err) {
+    console.error("Erreur lors de la recherche d'utilisateurs:", err);
+    return [];
+  }
+}

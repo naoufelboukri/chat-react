@@ -1,4 +1,6 @@
 export function getErrorMessage(errorCode) {
+
+    console.log("errorCode", errorCode);
     switch (errorCode) {
         case "auth/invalid-credential":
             return "Les informations d'identification fournies ne sont pas valides.";
@@ -14,6 +16,8 @@ export function getErrorMessage(errorCode) {
             return "L'authentification par e-mail et mot de passe n'est pas activée.";
         case "auth/invalid-email":
             return "L'adresse e-mail est incorrect.";
+        case "auth/username-already-in-use":
+            return "Le nom d'utilisateur est déjà utilisé par un autre compte.";
         default:
             return "Une erreur s'est produite lors de l'authentification.";
     }
