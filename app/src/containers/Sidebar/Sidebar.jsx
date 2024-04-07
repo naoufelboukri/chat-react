@@ -9,6 +9,9 @@ import Modal from "../Modal/Modal.jsx";
 import CreateRoom from "../CreateRoom/CreateRoom.jsx";
 import './Sidebar.css';
 
+import ChatRoomList from "../../components/ChatRoomList/ChatRoomList.jsx";
+
+
 const Sidebar = ({ groups }) => {
     const navigate = useNavigate();
     const [isClose, setIsClose] = useState(true);
@@ -58,14 +61,18 @@ const Sidebar = ({ groups }) => {
                             </li>
                         </div>
                         <div className="sidebar-content">
-                            {/* Affichez ici les informations du groupe actif */}
-                            {activeGroup && (
-                                <div>
-                                    <h3>{activeGroup.name}</h3>
-                                    <p>Créé par: {activeGroup.createdBy}</p>
-                                    {/* Ajoutez d'autres détails du groupe ici si nécessaire */}
-                                </div>
-                            )}
+
+                            <ChatRoomList groupName="My Group" name="People" rooms={[
+                                { name: 'Random', color: '#f28b82' },
+                                { name: '168h', color: '#cbf0f8' },
+                                { name: 'General', color: '#a7ffeb' }
+                            ]} />
+
+                            <ChatRoomList name="Rooms" rooms={[
+                                { name: 'Random', color: '#f28b82' },
+                                { name: '168h', color: '#cbf0f8' },
+                                { name: 'General', color: '#a7ffeb' }
+                            ]} />
                         </div>
                     </div>
 
