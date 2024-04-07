@@ -62,17 +62,12 @@ const Sidebar = ({ groups }) => {
                         </div>
                         <div className="sidebar-content">
 
-                            <ChatRoomList groupName="My Group" name="People" rooms={[
-                                { name: 'Random', color: '#f28b82' },
-                                { name: '168h', color: '#cbf0f8' },
-                                { name: 'General', color: '#a7ffeb' }
-                            ]} />
-
-                            <ChatRoomList name="Rooms" rooms={[
-                                { name: 'Random', color: '#f28b82' },
-                                { name: '168h', color: '#cbf0f8' },
-                                { name: 'General', color: '#a7ffeb' }
-                            ]} />
+                            {activeGroup && (
+                                <ChatRoomList groupName={activeGroup.name} people={[
+                                    "jiong",
+                                    "Franck"
+                                ]} />
+                            )}
                         </div>
                     </div>
 

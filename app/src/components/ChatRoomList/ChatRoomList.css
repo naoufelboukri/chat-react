@@ -1,8 +1,10 @@
 .chat-room-group-name {
     color: #ffffff;
-    background-color: #5865f2; /* Une couleur distincte ou celle de votre choix */
+    background-color: #5865f2;
+    /* Une couleur distincte ou celle de votre choix */
     padding: 10px;
-    border-top-left-radius: 4px; /* Ajustez le radius si nécessaire */
+    border-top-left-radius: 4px;
+    /* Ajustez le radius si nécessaire */
     border-top-right-radius: 4px;
     font-weight: bold;
     margin-bottom: 10px;
@@ -46,6 +48,32 @@
     font-weight: bold;
     margin-right: 10px;
 }
+
+.chat-room-user {
+    display: flex;
+    align-items: center; /* Centre verticalement les éléments dans l'item */
+    margin-bottom: 5px; /* Espacement entre chaque item */
+}
+
+
+.chat-room-user-icon {
+    width: 30px; /* Taille de l'icône */
+    height: 30px; /* Taille de l'icône */
+    border-radius: 50%; /* Rend l'icône circulaire */
+    display: flex;
+    align-items: center; /* Centre le texte verticalement dans l'icône */
+    justify-content: center; /* Centre le texte horizontalement dans l'icône */
+    color: white; /* Couleur du texte */
+    font-weight: bold; /* Poids du texte */
+    background-color: #5865f2; /* Couleur de fond de l'icône */
+    margin-right: 10px; /* Espacement entre l'icône et le nom */
+}
+
+.chat-room-user-name {
+    color: white; /* Couleur du nom de l'utilisateur */
+    /* Ajoutez ici d'autres styles pour le nom si nécessaire */
+}
+
 
 .chat-room-name {
     flex-grow: 1;
