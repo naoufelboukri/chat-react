@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import './ChatRoomList.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '@mui/material/Tooltip'; // Importer Tooltip de MUI
 import IconButton from '@mui/material/IconButton'; // Importer IconButton de MUI
 import AddIcon from '@mui/icons-material/Add'; // Importer AddIcon de MUI
@@ -34,12 +32,12 @@ const ChatRoomList = ({ groupName, rooms, people }) => {
                     <span>People 👤 {people.length}</span>
                 </div>
                 {/* Button "+" avec Tooltip à droite */}
-                <Tooltip title="Ajouter une salle">
+                <Tooltip title="Add people">
                     <IconButton
                         className="add-people-btn"
                         onClick={(e) => {
                             e.stopPropagation(); // Empêche toggleRoomsList lors du clic sur le bouton
-                            console.log("Ajouter une salle");
+                            console.log("Add people");
                         }}
                         size="large"
                         sx={{
@@ -58,15 +56,16 @@ const ChatRoomList = ({ groupName, rooms, people }) => {
             {isPeopleExpanded && people && people.length > 0 && (
                 <ul className="chat-room-items">
                     {people.map((person, index) => (
-                        <li key={index} className="chat-room-user">
-                            <span className="chat-room-user-icon" style={{ backgroundColor: "#5865f2" }}> {/* Mettez ici la couleur de fond de votre choix */}
-                                {person.charAt(0).toUpperCase()} {/* Affiche la première lettre du nom */}
+                        <li key={index} className="chat-room-user"> {/* Utilisation de person.id pour la clé */}
+                            <span className="chat-room-user-icon" style={{ backgroundColor: "#5865f2" }}>
+                                {person.name.charAt(0).toUpperCase()} {/* Affiche la première lettre du nom */}
                             </span>
-                            <span className="chat-room-user-name">{person}</span>
+                            <span className="chat-room-user-name">{person.name}</span>
                         </li>
                     ))}
                 </ul>
             )}
+
 
             {/* Section pour les salles */}
             <div className="chat-room-header" onClick={toggleRoomsList}>
@@ -75,11 +74,11 @@ const ChatRoomList = ({ groupName, rooms, people }) => {
                     &nbsp;
                     <span>Rooms</span>
                 </div>
-                <Tooltip title="Ajouter une salle">
+                <Tooltip title="Add room">
                     <IconButton
                         onClick={(e) => {
                             e.stopPropagation();
-                            console.log("Ajouter une salle");
+                            console.log("Add room");
                         }}
                         size="large"
                         sx={{
