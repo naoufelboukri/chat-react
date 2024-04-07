@@ -19,34 +19,19 @@ import {
  * @param {string} usernameId id du créateur du groupe
  * @param {string[]} memberIds id des membres du groupe
  */
-export async function createChatGroup(name, usernameId, memberIds) {
+export async function createChatGroup(name, currentUser) {
   try {
     const firestore = getFirestore()
 
-    const group = await addDoc(collection(firestore, "groups"), {
+    await addDoc(collection(firestore, "groups"), {
       name: name,
-      createdBy: usernameId,
+      createdBy: currentUser.uid,
       createdAt: new Date(),
-      members: memberIds,
+      members: [
+        { name: currentUser.displayName, id: currentUser.uid }
+      ],
     });
 
-    const groupId = group.id
-
-    await updateDoc(group, {
-      id: groupId,
-    })
-
-    //Ajout du salon dans la liste des salons des membres
-    for (let memberId of memberIds) {
-      const member = await getDoc(doc(firestore, "users", memberId))
-
-      if (member.exists()) {
-        const memberData = member.data()
-        const groups = memberData.groups || []
-
-        groups.push(groupId)
-      }
-    }
   } catch (err) {
     console.error("Erreur: ", err)
   }
@@ -110,7 +95,7 @@ export async function myGroupList(userId) {
 
 export function listenForGroupsByUserId(userId, setGroups) {
   const firestore = getFirestore(app);
-  
+
   // Créez une requête pour trouver les groupes où le champ 'createdBy' correspond à l'userId donné
   // const groupsQuery = query(collection(firestore, "groups"), where("createdBy", "==", userId));
 

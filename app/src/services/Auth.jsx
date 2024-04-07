@@ -4,6 +4,7 @@ import { getFirestore, setDoc, doc } from "firebase/firestore"
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth"
 
 export async function register(email, username, password) {
@@ -18,6 +19,12 @@ export async function register(email, username, password) {
     username: username,
     email: email,
   });
+
+  // Mise à jour du displayName dans le profil utilisateur
+  await updateProfile(userCreated.user, {
+    displayName: username,
+  });
+
 
   // Si nécessaire, ajoutez plus de logique ici après la création de l'utilisateur et la mise à jour de Firestore
   return userCreated;

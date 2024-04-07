@@ -12,23 +12,9 @@ import { createChatGroup } from "../../services/ChatGroup.jsx";
 // Context
 import { useAuth } from "../../contexts/AuthContext.jsx";
 
-// const names = [
-//     'Oliver Hansen',
-//     'Van Henry',
-//     'April Tucker',
-//     'Ralph Hubbard',
-//     'Omar Alexander',
-//     'Carlos Abbott',
-//     'Miriam Wagner',
-//     'Bradley Wilkerson',
-//     'Virginia Andrews',
-//     'Kelly Snyder',
-// ];
-
 const CreateRoom = ({ closeModal }) => {
 
     const [roomName, setRoomName] = useState('');
-    const [users, setUsers] = useState([]);
 
     const { currentUser } = useAuth();
 
@@ -36,7 +22,7 @@ const CreateRoom = ({ closeModal }) => {
         event.preventDefault();
         try {
             if (roomName !== '') {
-                await createChatGroup(roomName, currentUser.uid, users);
+                await createChatGroup(roomName, currentUser);
                 setRoomName('');
                 closeModal();
             }
@@ -46,7 +32,7 @@ const CreateRoom = ({ closeModal }) => {
     }
 
     useEffect(() => {
-        console.log("currentUser: ", currentUser.uid);
+        console.log("currentUser: ", currentUser);
     }, [currentUser]);
 
     return (
