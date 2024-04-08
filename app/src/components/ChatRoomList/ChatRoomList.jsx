@@ -5,19 +5,30 @@ import IconButton from '@mui/material/IconButton'; // Importer IconButton de MUI
 import AddIcon from '@mui/icons-material/Add'; // Importer AddIcon de MUI
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; // Chevron vers le bas
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'; // Chevron vers la droite
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 import AddPeopleDialog from '../AddPeopleDialog/AddPeopleDialog'; // Importer le composant AddPeopleDialog
 
+// Contexte d'authentification
+import { useAuth } from '../../contexts/AuthContext';
+
 // Firebase
-import { addUsersToGroup } from '../../services/ChatGroup';
+import { addUsersToGroup, removeUserFromGroup } from '../../services/ChatGroup';
+
 
 
 const ChatRoomList = ({ activeGroup, groupName, rooms, people }) => {
 
+    const { currentUser } = useAuth();
     const [openDialog, setOpenDialog] = useState(false);
 
     const [isPeopleExpanded, setIsPeopleExpanded] = useState(true);
     const [isRoomsExpanded, setIsRoomsExpanded] = useState(true);
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [selectedPerson, setSelectedPerson] = useState(null);
 
     const togglePeopleList = () => {
         setIsPeopleExpanded(!isPeopleExpanded);
@@ -36,15 +47,32 @@ const ChatRoomList = ({ activeGroup, groupName, rooms, people }) => {
     };
 
     const handleAddPeople = async (selectedUsers) => {
-        try{
+        try {
             // Ajouter les utilisateurs au groupe
             await addUsersToGroup(activeGroup.id, selectedUsers);
 
             handleCloseDialog(); // Fermer le dialogue après l'ajout
 
-        } catch(error){
+        } catch (error) {
             console.error("Erreur lors de l'ajout des utilisateurs:", error);
         }
+    };
+    
+    const handleClick = (event, member) => {
+        setAnchorEl(event.currentTarget);
+        setSelectedPerson(member);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+        setSelectedPerson(null);
+    };
+
+    const handleDelete = async () => {
+        console.log('Supprimer:', selectedPerson);
+        await removeUserFromGroup(activeGroup.id, selectedPerson.id);
+        // Ici, insérez la logique pour supprimer la personne
+        handleClose(); // Fermez le menu après l'action
     };
 
     return (
@@ -84,16 +112,52 @@ const ChatRoomList = ({ activeGroup, groupName, rooms, people }) => {
             </div>
 
 
-            {isPeopleExpanded && people && people.length > 0 && (
+            {isPeopleExpanded && activeGroup && activeGroup.memberIds && activeGroup.memberIds.length > 0 && (
                 <ul className="chat-room-items">
-                    {people.map((person, index) => (
-                        <li key={index} className="chat-room-user"> {/* Utilisation de person.id pour la clé */}
+                    {activeGroup.memberIds.map((memberId, index) => (
+                        <li key={index} className="chat-room-user">
                             <span className="chat-room-user-icon" style={{ backgroundColor: "#5865f2" }}>
-                                {person.charAt(0).toUpperCase()} {/* Affiche la première lettre du nom */}
+                                {activeGroup.membersName[index].charAt(0).toUpperCase()}
                             </span>
-                            <span className="chat-room-user-name">{person}</span>
+                            <span className="chat-room-user-name">{activeGroup.membersName[index]}</span>
+                            {activeGroup.createdBy === currentUser.uid && (
+                            <IconButton
+                                aria-label="more"
+                                aria-controls="long-menu"
+                                aria-haspopup="true"
+                                onClick={(e) => handleClick(e, {
+                                    id: memberId,
+                                    email: activeGroup.membersEmail[index],
+                                    name: activeGroup.membersName[index]
+                                })}
+                                size="small"
+                                sx={{
+                                    transform: 'rotate(90deg)', // Rotation de 90 degrés pour l'horizontal
+                                    marginLeft: 'auto', // Pour pousser l'icône à droite
+                                    color: 'white', // Couleur de l'icône
+                                }}
+                            >
+                                <MoreVertIcon />
+                            </IconButton>
+                            )}
                         </li>
                     ))}
+
+                    <Menu
+                        id="long-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                        sx={{
+                            '& .MuiPaper-root': {
+                                backgroundColor: '#333', // Couleur de fond du menu
+                                color: 'white', // Couleur du texte
+                            },
+                        }}
+                    >
+                        <MenuItem onClick={handleDelete}>Supprimer</MenuItem>
+                    </Menu>
                 </ul>
             )}
 
