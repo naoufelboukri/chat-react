@@ -8,6 +8,11 @@
     border-top-right-radius: 4px;
     font-weight: bold;
     margin-bottom: 10px;
+
+    display: flex;
+    justify-content: space-between; /* Répartit les éléments entre eux */
+    align-items: center; /* Centre les éléments verticalement */
+    cursor: pointer;
 }
 
 .chat-room-list {

@@ -30,6 +30,8 @@ const ChatRoomList = ({ activeGroup, groupName, rooms, people }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedPerson, setSelectedPerson] = useState(null);
 
+    const [groupMenuAnchorEl, setGroupMenuAnchorEl] = useState(null);
+
     const togglePeopleList = () => {
         setIsPeopleExpanded(!isPeopleExpanded);
     };
@@ -57,7 +59,7 @@ const ChatRoomList = ({ activeGroup, groupName, rooms, people }) => {
             console.error("Erreur lors de l'ajout des utilisateurs:", error);
         }
     };
-    
+
     const handleClick = (event, member) => {
         setAnchorEl(event.currentTarget);
         setSelectedPerson(member);
@@ -75,9 +77,59 @@ const ChatRoomList = ({ activeGroup, groupName, rooms, people }) => {
         handleClose(); // Fermez le menu après l'action
     };
 
+    const handleGroupMenuClick = (event) => {
+        setGroupMenuAnchorEl(event.currentTarget);
+    };
+
+    const handleGroupMenuClose = () => {
+        setGroupMenuAnchorEl(null);
+    };
+
+    const handleLeaveGroup = async () => {
+        console.log("Quitter le groupe:", activeGroup.name);
+        await removeUserFromGroup(activeGroup.id, currentUser.uid);
+        // Ici, ajoutez la logique pour retirer l'utilisateur du groupe dans votre base de données
+        handleGroupMenuClose(); // Fermez le menu après l'action
+    };
+
     return (
         <div className="chat-room-list">
-            {groupName && <div className="chat-room-group-name">{groupName}</div>}
+            {groupName && (
+                <div className="chat-room-group-name">
+                    {groupName}
+                    <IconButton
+                        aria-label="settings"
+                        aria-controls="group-menu"
+                        aria-haspopup="true"
+                        onClick={handleGroupMenuClick}
+                        size="small"
+                        sx={{
+                            transform: 'rotate(90deg)', // Rotation de 90 degrés pour l'horizontal
+                            marginLeft: '10px', // Ajustez selon votre mise en page
+                            color: 'white', // Assurez-vous que la couleur correspond à votre thème
+                        }}
+                    >
+                        <MoreVertIcon />
+                    </IconButton>
+                </div>
+            )}
+
+
+            <Menu
+                id="group-menu"
+                anchorEl={groupMenuAnchorEl}
+                keepMounted
+                open={Boolean(groupMenuAnchorEl)}
+                onClose={handleGroupMenuClose}
+                sx={{
+                    '& .MuiPaper-root': {
+                        backgroundColor: 'red', // Couleur de fond du menu en rouge
+                        color: 'white', // Couleur du texte
+                    },
+                }}
+            >
+                <MenuItem onClick={handleLeaveGroup}>Leave</MenuItem>
+            </Menu>
 
             {/* Section pour les personnes */}
             <div className="chat-room-header">
@@ -121,24 +173,24 @@ const ChatRoomList = ({ activeGroup, groupName, rooms, people }) => {
                             </span>
                             <span className="chat-room-user-name">{activeGroup.membersName[index]}</span>
                             {activeGroup.createdBy === currentUser.uid && (
-                            <IconButton
-                                aria-label="more"
-                                aria-controls="long-menu"
-                                aria-haspopup="true"
-                                onClick={(e) => handleClick(e, {
-                                    id: memberId,
-                                    email: activeGroup.membersEmail[index],
-                                    name: activeGroup.membersName[index]
-                                })}
-                                size="small"
-                                sx={{
-                                    transform: 'rotate(90deg)', // Rotation de 90 degrés pour l'horizontal
-                                    marginLeft: 'auto', // Pour pousser l'icône à droite
-                                    color: 'white', // Couleur de l'icône
-                                }}
-                            >
-                                <MoreVertIcon />
-                            </IconButton>
+                                <IconButton
+                                    aria-label="more"
+                                    aria-controls="long-menu"
+                                    aria-haspopup="true"
+                                    onClick={(e) => handleClick(e, {
+                                        id: memberId,
+                                        email: activeGroup.membersEmail[index],
+                                        name: activeGroup.membersName[index]
+                                    })}
+                                    size="small"
+                                    sx={{
+                                        transform: 'rotate(90deg)', // Rotation de 90 degrés pour l'horizontal
+                                        marginLeft: 'auto', // Pour pousser l'icône à droite
+                                        color: 'white', // Couleur de l'icône
+                                    }}
+                                >
+                                    <MoreVertIcon />
+                                </IconButton>
                             )}
                         </li>
                     ))}
