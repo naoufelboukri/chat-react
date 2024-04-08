@@ -63,7 +63,7 @@ const Sidebar = ({ groups }) => {
                         <div className="sidebar-content">
 
                             {activeGroup && (
-                                <ChatRoomList groupName={activeGroup.name} people={activeGroup.members} />
+                                <ChatRoomList activeGroup={activeGroup} groupName={activeGroup.name} people={activeGroup.membersName} />
                             )}
                         </div>
                     </div>

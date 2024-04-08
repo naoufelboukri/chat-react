@@ -27,9 +27,9 @@ export async function createChatGroup(name, currentUser) {
       name: name,
       createdBy: currentUser.uid,
       createdAt: new Date(),
-      members: [
-        { name: currentUser.displayName, id: currentUser.uid }
-      ],
+      memberIds: [currentUser.uid],
+      membersName: [currentUser.displayName],
+      membersEmail: [currentUser.email],
     });
 
   } catch (err) {
@@ -101,7 +101,7 @@ export function listenForGroupsByUserId(userId, setGroups) {
 
   const groupsQuery = query(
     collection(firestore, "groups"),
-    where("createdBy", "==", userId),
+    where("memberIds", "array-contains", userId), 
     orderBy("createdAt", "desc")
   );
 
@@ -154,5 +154,47 @@ export async function searchUsersByPseudo(pseudoText) {
   } catch (err) {
     console.error("Erreur lors de la recherche d'utilisateurs:", err);
     return [];
+  }
+}
+
+/**
+ * Ajoute des utilisateurs à un groupe existant
+ * @param {string} groupId l'identifiant du groupe à mettre à jour
+ * @param {Array<Object>} newMembers les nouveaux membres à ajouter, chaque membre étant un objet { id: string, name: string }
+ */
+export async function addUsersToGroup(groupId, newMembers) {
+  const firestore = getFirestore(app); // Obtient une référence à la base de données Firestore
+
+  // Référence au document du groupe dans Firestore
+  const groupDocRef = doc(firestore, "groups", groupId);
+
+  try {
+    // Récupère le document du groupe actuel pour obtenir la liste des membres existants
+    const groupDoc = await getDoc(groupDocRef);
+
+    if (!groupDoc.exists()) {
+      throw new Error('Le groupe n\'existe pas');
+    }
+
+    // Obtient les listes actuelles des IDs, noms, et emails des membres
+    const existingMemberIds = groupDoc.data().memberIds || [];
+    const existingMembersName = groupDoc.data().membersName || [];
+    const existingMembersEmail = groupDoc.data().membersEmail || [];
+
+    // Prépare les nouvelles listes
+    const updatedMemberIds = [...new Set([...existingMemberIds, ...newMembers.map(member => member.id)])];
+    const updatedMembersName = [...new Set([...existingMembersName, ...newMembers.map(member => member.name)])];
+    const updatedMembersEmail = [...new Set([...existingMembersEmail, ...newMembers.map(member => member.email)])];
+
+    // Met à jour le document du groupe avec les nouvelles listes
+    await updateDoc(groupDocRef, {
+      memberIds: updatedMemberIds,
+      membersName: updatedMembersName,
+      membersEmail: updatedMembersEmail,
+    });
+
+    console.log('Les membres ont été ajoutés au groupe avec succès');
+  } catch (err) {
+    console.error("Erreur lors de l'ajout des membres au groupe:", err);
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './ChatRoomList.css';
 import Tooltip from '@mui/material/Tooltip'; // Importer Tooltip de MUI
 import IconButton from '@mui/material/IconButton'; // Importer IconButton de MUI
@@ -8,8 +8,11 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight'; // Chevron vers
 
 import AddPeopleDialog from '../AddPeopleDialog/AddPeopleDialog'; // Importer le composant AddPeopleDialog
 
+// Firebase
+import { addUsersToGroup } from '../../services/ChatGroup';
 
-const ChatRoomList = ({ groupName, rooms, people }) => {
+
+const ChatRoomList = ({ activeGroup, groupName, rooms, people }) => {
 
     const [openDialog, setOpenDialog] = useState(false);
 
@@ -32,13 +35,17 @@ const ChatRoomList = ({ groupName, rooms, people }) => {
         setOpenDialog(false);
     };
 
-    const users = [
-        { name: 'John Doe', id: 1 },
-        { name: 'Jane Doe', id: 2 },
-        // Ajoutez plus d'utilisateurs ici...
-    ];
+    const handleAddPeople = async (selectedUsers) => {
+        try{
+            // Ajouter les utilisateurs au groupe
+            await addUsersToGroup(activeGroup.id, selectedUsers);
 
+            handleCloseDialog(); // Fermer le dialogue après l'ajout
 
+        } catch(error){
+            console.error("Erreur lors de l'ajout des utilisateurs:", error);
+        }
+    };
 
     return (
         <div className="chat-room-list">
@@ -50,7 +57,7 @@ const ChatRoomList = ({ groupName, rooms, people }) => {
                     {/* Chevron icon */}
                     {isPeopleExpanded ? <ExpandMoreIcon style={{ color: 'white' }} /> : <ChevronRightIcon style={{ color: 'white' }} />}
                     &nbsp; {/* Text and count */}
-                    <span>People 👤 {people.length}</span>
+                    {/* <span>People 👤 {people.length}</span> */}
                 </div>
                 {/* Button "+" avec Tooltip à droite */}
                 <Tooltip title="Add people">
@@ -72,7 +79,7 @@ const ChatRoomList = ({ groupName, rooms, people }) => {
                 <AddPeopleDialog
                     open={openDialog}
                     handleClose={handleCloseDialog}
-                    users={users}
+                    onAdd={handleAddPeople} // Passer la fonction en tant que prop
                 />
             </div>
 
@@ -82,9 +89,9 @@ const ChatRoomList = ({ groupName, rooms, people }) => {
                     {people.map((person, index) => (
                         <li key={index} className="chat-room-user"> {/* Utilisation de person.id pour la clé */}
                             <span className="chat-room-user-icon" style={{ backgroundColor: "#5865f2" }}>
-                                {person.name.charAt(0).toUpperCase()} {/* Affiche la première lettre du nom */}
+                                {person.charAt(0).toUpperCase()} {/* Affiche la première lettre du nom */}
                             </span>
-                            <span className="chat-room-user-name">{person.name}</span>
+                            <span className="chat-room-user-name">{person}</span>
                         </li>
                     ))}
                 </ul>
