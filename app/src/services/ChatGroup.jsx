@@ -11,6 +11,7 @@ import {
   where,
   onSnapshot,
   orderBy,
+  deleteDoc,
 } from "firebase/firestore"
 
 /**
@@ -212,36 +213,45 @@ export async function removeUserFromGroup(groupId, memberId) {
   const groupDocRef = doc(firestore, "groups", groupId);
 
   try {
-    // Récupère le document du groupe actuel pour obtenir la liste des membres existants
+    // Récupère le document du groupe actuel
     const groupDoc = await getDoc(groupDocRef);
 
     if (!groupDoc.exists()) {
       throw new Error('Le groupe n\'existe pas');
     }
 
-    // Obtient les listes actuelles des IDs, noms, et emails des membres
-    const existingMemberIds = groupDoc.data().memberIds || [];
-    const existingMembersName = groupDoc.data().membersName || [];
-    const existingMembersEmail = groupDoc.data().membersEmail || [];
+    const groupData = groupDoc.data();
 
-    // Indices du membre à supprimer dans chaque liste
-    const indexId = existingMemberIds.indexOf(memberId);
-    const indexName = existingMembersName.findIndex((name, index) => existingMemberIds[index] === memberId);
-    const indexEmail = existingMembersEmail.findIndex((email, index) => existingMemberIds[index] === memberId);
+    // Vérifie si le membre à supprimer est le créateur du groupe
+    if (groupData.createdBy === memberId) {
+      // Le créateur quitte le groupe, donc supprime le groupe entier
+      await deleteDoc(groupDocRef);
+      console.log(`Le groupe ${groupId} a été supprimé car le créateur a quitté le groupe.`);
+    } else {
+      // Ce n'est pas le créateur, procède à la suppression du membre des listes
+      const existingMemberIds = groupData.memberIds || [];
+      const existingMembersName = groupData.membersName || [];
+      const existingMembersEmail = groupData.membersEmail || [];
 
-    // Suppression du membre dans chaque liste
-    if (indexId !== -1) existingMemberIds.splice(indexId, 1);
-    if (indexName !== -1) existingMembersName.splice(indexName, 1);
-    if (indexEmail !== -1) existingMembersEmail.splice(indexEmail, 1);
+      // Indices du membre à supprimer dans chaque liste
+      const indexId = existingMemberIds.indexOf(memberId);
+      const indexName = existingMembersName.findIndex((name, index) => existingMemberIds[index] === memberId);
+      const indexEmail = existingMembersEmail.findIndex((email, index) => existingMemberIds[index] === memberId);
 
-    // Met à jour le document du groupe avec les listes mises à jour
-    await updateDoc(groupDocRef, {
-      memberIds: existingMemberIds,
-      membersName: existingMembersName,
-      membersEmail: existingMembersEmail,
-    });
+      // Suppression du membre dans chaque liste
+      if (indexId !== -1) existingMemberIds.splice(indexId, 1);
+      if (indexName !== -1) existingMembersName.splice(indexName, 1);
+      if (indexEmail !== -1) existingMembersEmail.splice(indexEmail, 1);
 
-    console.log(`Le membre ${memberId} a été supprimé du groupe avec succès.`);
+      // Met à jour le document du groupe avec les listes mises à jour
+      await updateDoc(groupDocRef, {
+        memberIds: existingMemberIds,
+        membersName: existingMembersName,
+        membersEmail: existingMembersEmail,
+      });
+
+      console.log(`Le membre ${memberId} a été supprimé du groupe avec succès.`);
+    }
   } catch (err) {
     console.error("Erreur lors de la suppression du membre du groupe:", err);
   }
