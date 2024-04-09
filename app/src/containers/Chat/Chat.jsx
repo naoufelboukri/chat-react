@@ -14,7 +14,7 @@ const mock_messages = [
     { content: 'wsh', time: '13:21' },
 ];
 
-const Chat = () => {
+const Chat = ({ group }) => {
 
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState(mock_messages);
@@ -35,6 +35,10 @@ const Chat = () => {
     useEffect(() => {
         hiddenTargetRef.current.scrollIntoView({ behavior: 'smooth' });
     }, [chat]);
+
+    useEffect(() => {
+        console.log("groups message", group);
+    }, [group]);
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter' && !event.shiftKey) {

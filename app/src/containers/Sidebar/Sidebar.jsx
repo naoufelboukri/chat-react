@@ -12,32 +12,22 @@ import './Sidebar.css';
 import ChatRoomList from "../../components/ChatRoomList/ChatRoomList.jsx";
 
 
-const Sidebar = ({ groups }) => {
+const Sidebar = ({ groups, setActiveGroupIndex, activeGroupIndex }) => {
     const navigate = useNavigate();
     const [isClose, setIsClose] = useState(true);
-    const [index, setIndex] = useState(0); // Index du groupe actif
     const [modalIsVisible, setModalIsVisible] = useState(false);
 
     const handleLogout = async () => {
         try {
-            await signOut(); // Appelle la fonction signOut importée
+            await signOut();
             navigate("/login");
         } catch (error) {
             console.error("Erreur lors de la déconnexion:", error);
         }
     };
 
-    // Utilisez l'état 'index' pour déterminer quel groupe est actuellement sélectionné
-    const activeGroup = groups[index];
-
-    const rooms = groups.map((group, i) => (
-        <Control
-            room={{ name: group.name, by: group.createdBy }} // Adaptez selon la structure de vos données
-            active={index === i}
-            setActive={() => setIndex(i)}
-            key={i}
-        />
-    ));
+    // Active group for detailed view in the sidebar content
+    const activeGroup = groups[activeGroupIndex];
 
     return (
         <>
@@ -55,15 +45,25 @@ const Sidebar = ({ groups }) => {
 
                     <div className="sidebar-main">
                         <div className="sidebar-controls">
-                            {rooms}
+                            {groups.map((group, i) => (
+                                <Control
+                                    key={i}
+                                    room={{ name: group.name, by: group.createdBy }}
+                                    active={activeGroupIndex === i}
+                                    setActive={() => setActiveGroupIndex(i)}
+                                />
+                            ))}
                             <li className="Control Control-button" onClick={() => setModalIsVisible(true)}>
                                 <FontAwesomeIcon icon={faPlus} />
                             </li>
                         </div>
                         <div className="sidebar-content">
-
                             {activeGroup && (
-                                <ChatRoomList activeGroup={activeGroup} groupName={activeGroup.name} people={activeGroup.membersName} />
+                                <ChatRoomList
+                                    activeGroup={activeGroup}
+                                    groupName={activeGroup.name}
+                                    people={activeGroup.membersName}
+                                />
                             )}
                         </div>
                     </div>

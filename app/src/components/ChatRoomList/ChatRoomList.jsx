@@ -137,7 +137,7 @@ const ChatRoomList = ({ activeGroup, groupName, rooms, people }) => {
                     {/* Chevron icon */}
                     {isPeopleExpanded ? <ExpandMoreIcon style={{ color: 'white' }} /> : <ChevronRightIcon style={{ color: 'white' }} />}
                     &nbsp; {/* Text and count */}
-                    {/* <span>People 👤 {people.length}</span> */}
+                    <span>People 👤 {people.length}</span>
                 </div>
                 {/* Button "+" avec Tooltip à droite */}
                 <Tooltip title="Add people">

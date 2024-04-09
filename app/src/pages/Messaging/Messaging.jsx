@@ -15,6 +15,8 @@ const Messaging = () => {
     const { currentUser } = useAuth();
     const [groups, setGroups] = useState([]);
 
+    const [activeGroupIndex, setActiveGroupIndex] = useState(0);
+
     useEffect(() => {
         let unsubscribe;
 
@@ -31,8 +33,12 @@ const Messaging = () => {
 
     return (
         <div className="Messaging">
-            <Sidebar groups={groups}/>
-            <Chat />
+            <Sidebar
+                groups={groups}
+                setActiveGroupIndex={setActiveGroupIndex}
+                activeGroupIndex={activeGroupIndex}
+            />
+            <Chat group={groups[activeGroupIndex]} />
         </div>
     )
 }
