@@ -215,7 +215,7 @@ const ChatRoomList = ({ activeGroup, groupName, rooms, people }) => {
 
 
             {/* Section pour les salles */}
-            <div className="chat-room-header" >
+            {/* <div className="chat-room-header" >
                 <div className="chat-room-header-content" onClick={toggleRoomsList}>
                     {isRoomsExpanded ? <ExpandMoreIcon style={{ color: 'white' }} /> : <ChevronRightIcon style={{ color: 'white' }} />}
                     &nbsp;
@@ -250,7 +250,7 @@ const ChatRoomList = ({ activeGroup, groupName, rooms, people }) => {
                         </li>
                     ))}
                 </ul>
-            )}
+            )} */}
         </div>
     );
 };
