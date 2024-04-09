@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
+import { format } from "date-fns";
+
 import Message from "../../components/Message/Message.jsx";
 
 import './Chat.css';
@@ -62,15 +64,46 @@ const Chat = ({ group }) => {
         }
     };
 
-    const messages = chat.map((message, index) => (
-        <Message
-            from={message.from}
-            createdAt={message.createdAt} // Vous devrez peut-être formater cette date
-            key={index}
-        >
-            {message.content}
-        </Message>
-    ));
+    // const messages = chat.map((message, index) => (
+    //     <Message
+    //         from={message.from}
+    //         createdAt={message.createdAt} // Vous devrez peut-être formater cette date
+    //         key={index}
+    //     >
+    //         {message.content}
+    //     </Message>
+    // ));
+
+    const messages = chat.map((message, index) => {
+        // Déterminez si le message a été envoyé par l'utilisateur actuel
+        const isMyMessage = message.userId === currentUser.uid;
+
+        // Convertissez l'objet Timestamp en objet Date puis en string formaté
+        // Supposons que createdAt est un objet Timestamp de Firestore
+        // Vérifiez si createdAt existe avant de convertir, sinon utilisez une valeur par défaut ou cachez la date
+        let formattedDate = "Date inconnue";
+        if (message.createdAt) {
+            const messageDate = message.createdAt.toDate();
+            formattedDate = format(messageDate, "PPpp"); // Ou utilisez .toLocaleString() si vous n'utilisez pas date-fns
+        }
+
+        return (
+            <div
+                className={`message ${isMyMessage ? 'my-message' : 'other-message'}`}
+                key={index}
+            >
+                <div>
+                    <strong>{isMyMessage ? 'Moi' : message.from}</strong>
+                    <span style={{ marginLeft: '10px', fontSize: '0.8rem' }}>
+                        {formattedDate}
+                    </span>
+                </div>
+                <div>{message.content}</div>
+            </div>
+        );
+    });
+
+
 
     return (
         <div className="chat">
