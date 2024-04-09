@@ -12,6 +12,8 @@ import {
   onSnapshot,
   orderBy,
   deleteDoc,
+  serverTimestamp,
+  limit,
 } from "firebase/firestore"
 
 /**
@@ -255,4 +257,42 @@ export async function removeUserFromGroup(groupId, memberId) {
   } catch (err) {
     console.error("Erreur lors de la suppression du membre du groupe:", err);
   }
+}
+
+
+export async function addMessageToGroup(groupId, message) {
+  try {
+    const firestore = getFirestore(app); // Obtient une référence à la base de données Firestore
+    // Accédez à la sous-collection 'messages' du groupe spécifié
+    await addDoc(collection(firestore, "groups", groupId, "messages"), {
+      ...message,
+      createdAt: serverTimestamp(), // Timestamp serveur pour l'heure exacte de création
+    });
+    console.log("Message ajouté avec succès au groupe");
+  } catch (error) {
+    console.error("Erreur lors de l'ajout du message:", error);
+  }
+}
+
+
+export function listenForMessages(groupId, setMessages) {
+  const firestore = getFirestore(app);
+
+  const messagesQuery = query(
+    collection(firestore, "groups", groupId, "messages"),
+    orderBy("createdAt", "asc"),
+    limit(20)
+  );
+
+  const unsubscribe = onSnapshot(messagesQuery, (querySnapshot) => {
+    const messages = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setMessages(messages);
+  }, (error) => {
+    console.error("Erreur lors de l'écoute des messages:", error);
+  });
+
+  return unsubscribe; // Retournez la fonction de désinscription pour arrêter l'écoute lorsque cela n'est plus nécessaire
 }
