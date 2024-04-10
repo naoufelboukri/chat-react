@@ -281,7 +281,7 @@ export function listenForMessages(groupId, setMessages) {
   const messagesQuery = query(
     collection(firestore, "groups", groupId, "messages"),
     orderBy("createdAt", "asc"),
-    limit(20)
+    // limit(20)
   );
 
   const unsubscribe = onSnapshot(messagesQuery, (querySnapshot) => {
