@@ -9,6 +9,7 @@
     color: rgba(255, 255, 255, 0.87);
     cursor: pointer;
     transition: 250ms;
+    margin: 10px 0 0;
 }
 
 .Button:hover {
