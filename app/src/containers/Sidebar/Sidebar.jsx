@@ -20,7 +20,7 @@ const Sidebar = ({ groups, setActiveGroupIndex, activeGroupIndex }) => {
     const handleLogout = async () => {
         try {
             await signOut();
-            navigate("/login");
+            navigate("/");
         } catch (error) {
             console.error("Erreur lors de la déconnexion:", error);
         }
@@ -68,7 +68,7 @@ const Sidebar = ({ groups, setActiveGroupIndex, activeGroupIndex }) => {
                         </div>
                     </div>
 
-                    <Link to="/login" className={isClose ? 'sidebar-footer sidebar-footer-close' : 'sidebar-footer'} onClick={handleLogout}>
+                    <Link to="/" className={isClose ? 'sidebar-footer sidebar-footer-close' : 'sidebar-footer'} onClick={handleLogout}>
                         <FontAwesomeIcon icon={faRightFromBracket} size={'2x'} />
                         <span>Logout</span>
                     </Link>

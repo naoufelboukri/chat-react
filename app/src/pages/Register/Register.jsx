@@ -53,7 +53,6 @@ function Register() {
             try {
                 setLoading(true);
                 const response = await register(email, username, password);
-                console.log("response", response);
                 if (response) {
                     clearFields();
                     navigate("/messaging"); // Redirection vers la page Messaging après connexion

@@ -14,3 +14,7 @@
 .Button:hover {
     background-color: #04305d;
 }
+
+.loader {
+    margin: auto;
+}

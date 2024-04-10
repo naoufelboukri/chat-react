@@ -1,14 +1,18 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
+import { useNavigate } from "react-router-dom";
+import {motion, useAnimation} from 'framer-motion';
 
 import Input from "../../components/Input/Input.jsx";
 import Button from "../../components/Button/Button.jsx";
 import AnimatedLogo from "../../components/AnimatedLogo/AnimatedLogo.jsx";
 import Alert from "../../components/Alert/Alert.jsx";
 import './Auth.css'
-import { useNavigate } from "react-router-dom";
 
 // FIREBASE
 import { register, login } from '../../services/Auth';
+import {faEnvelope, faLock, faUser} from "@fortawesome/free-solid-svg-icons";
+import ReactLoading from "react-loading";
+import {getErrorMessage} from "../../firebase/errorMessageFireBase.js";
 
 const wording = {
     signIn: { word: 'Sign In', paragraph: "Log in to access your messaging.", router: "Don't have an account ? " },
@@ -21,13 +25,13 @@ function Auth() {
     const [errorMessage, setErrorMessage] = useState('');
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("");
+    const [password2, setPassword2] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    const handleEmailChange = (value) => {
-        setEmail(value);
-    };
-
-    const handlePasswordChange = (value) => {
-        setPassword(value);
+    const variants = {
+        hidden: {height: 0, opacity: 0, transition: {duration: .5}},
+        visible: {height: 'auto', opacity: 1},
     };
 
     const clearFields = () => {
@@ -35,55 +39,66 @@ function Auth() {
         setPassword("");
     };
 
+    const auth = async () => {
+        try {
+            setLoading(true);
+            const response = signIn ? await login(email, password) : await register(email, username, password);
+            if (response) {
+                clearFields()
+                navigate('/messaging');
+            }
+        } catch (error) {
+            // Gérer les erreurs Firebase ici
+            const errorMessage = getErrorMessage(error.code);
+            // Afficher le message d'erreur personnalisé à l'utilisateur
+            setErrorMessage(errorMessage);
+            setLoading(false);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     const onSubmitHandler = async (event) => {
         event.preventDefault();
-        console.log("submit", email, password);
-        if (email !== '' || password !== '') {
-            try {
-                if (signIn) {
-                    await login(email, password);
-                    navigate("/messaging"); // Redirection vers la page Messaging après connexion
-                } else {
-                    await register(email, password);
-                    clearFields(); // Réinitialisation des champs après inscription
-                    setSignIn(true); // Changement vers la page Sign In après inscription
-                }
-            } catch (error) {
-                // Gérer les erreurs Firebase ici
-                // Personnaliser le message d'erreur en fonction du code d'erreur
-                let errorMessage = "Une erreur s'est produite lors de l'authentification.";
-                if (error.code === "auth/invalid-credential") {
-                    errorMessage = "Les informations d'identification fournies ne sont pas valides.";
-                } else if (error.code === "auth/user-not-found") {
-                    errorMessage = "Aucun utilisateur trouvé avec cet email.";
-                } else if (error.code === "auth/wrong-password") {
-                    errorMessage = "Le mot de passe est incorrect.";
-                } else if(error.code === "auth/weak-password"){
-                    errorMessage = "Le mot de passe doit contenir au moins 6 caractères.";
-                } else if(error.code === "auth/email-already-in-use"){
-                    errorMessage = "L'adresse e-mail est déjà utilisée par un autre compte.";
-                } else if(error.code === "auth/operation-not-allowed"){
-                    errorMessage = "L'authentification par e-mail et mot de passe n'est pas activée.";
-                }
-                // Afficher le message d'erreur personnalisé à l'utilisateur
-                setErrorMessage(errorMessage);
-            }
+
+        if (signIn && (email === '' || password === '')) {
+            setErrorMessage('Please fill all fields correctly');
+        } else if (!signIn && (username === '' || password === '' || email === '' || password2 === '')) {
+            setErrorMessage('Please fill all fields correctly');
+        } else if (!signIn && password !== password2) {
+            setErrorMessage('Passwords must be identical');
+        } else {
+            await auth();
         }
     }
 
     return (
-        <div className={'login'}>
-            <div className="login-container">
+        <div className={'auth'}>
+            <div className="auth-container">
                 <AnimatedLogo />
                 <form onSubmit={onSubmitHandler}>
                     <h2>{signIn ? wording.signIn.word : wording.signUp.word}</h2>
                     <p>{signIn ? wording.signIn.paragraph : wording.signUp.paragraph}</p>
-                    <Input onChange={handleEmailChange} />
-                    <Input secure onChange={handlePasswordChange} />
+                    <Input value={email} type={'email'} placeholder={'Email'} fa={faEnvelope} set={email => setEmail(email)}/>
+                    <Input
+                        animate={signIn ? 'hidden' : 'visible'}
+                        variants={variants}
+                        value={username} type={'text'} placeholder={'Username'} fa={faUser} set={username => setUsername(username)}/>
+                    <Input value={password} type={'password'} placeholder={'Password'} fa={faLock} set={password => setPassword(password)}/>
+                    <Input
+                        animate={signIn ? 'hidden' : 'visible'}
+                        variants={variants}
+                        value={password2} type={'password'} placeholder={'Confirm password'} fa={faLock} set={password2 => setPassword2(password2)}/>
                     {errorMessage.length > 0 && <Alert>{errorMessage}</Alert>}
-                    <Button>{signIn ? wording.signIn.word : wording.signUp.word}</Button>
+                    <Button>
+                        {
+                            loading ?
+                                <ReactLoading type={'bubbles'} color={'#fff'} height={30} width={30} className={'loader'}/> :
+                                signIn ? wording.signIn.word : wording.signUp.word
+                        }
+                    </Button>
                 </form>
-                <p className={'login-password-router'}>
+                <p className={'auth-password-router'}>
                     {signIn ? wording.signIn.router : wording.signUp.router}
                     <a onClick={() => setSignIn(!signIn)}>
                         {!signIn ? wording.signIn.word : wording.signUp.word}
