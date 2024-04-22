@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { HashRouter as Router, Route, Routes } from 'react-router-dom'
 import { onAuthStateChanged } from 'firebase/auth';
 
 import Messaging from "./pages/Messaging/Messaging.jsx";
