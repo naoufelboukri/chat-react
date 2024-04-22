@@ -1,4 +1,5 @@
 import {motion} from 'framer-motion';
+import logo from "../../assets/logo.png";
 
 import './AnimatedLogo.css';
 
@@ -18,7 +19,7 @@ const AnimatedLogo = () => {
 
     return (
         <div className="AnimatedLogo">
-            <img src={'/logo.png'}/>
+            <img src={logo}/>
             <h1>{title}</h1>
         </div>
     );

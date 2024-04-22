@@ -7,6 +7,7 @@ import Control from "./Control/Control.jsx";
 import { signOut } from "../../services/Auth.jsx"
 import Modal from "../Modal/Modal.jsx";
 import CreateRoom from "../CreateRoom/CreateRoom.jsx";
+import logo from "../../assets/logo.png";
 import './Sidebar.css';
 
 import ChatRoomList from "../../components/ChatRoomList/ChatRoomList.jsx";
@@ -39,7 +40,7 @@ const Sidebar = ({ groups, setActiveGroupIndex, activeGroupIndex }) => {
 
                 <div className={isClose ? 'sidebar sidebar-close' : 'sidebar'}>
                     <div className="sidebar-header">
-                        <img src={'/logo.png'} alt="Logo" />
+                        <img src={logo} alt="Logo"/>
                         <h2>Messaging</h2>
                     </div>
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { HashRouter as Router, Route, Routes } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { onAuthStateChanged } from 'firebase/auth';
 
 import Messaging from "./pages/Messaging/Messaging.jsx";
@@ -32,11 +32,11 @@ function App() {
     )
 
     return (
-        <Router>
+        <Router basename={'chat-react'}>
             <Routes>
                 <Route path="/" element={<Auth/>} />
                 <Route path={'/messaging'} element={
-                    <ProtectedRoute user={user}>
+                <ProtectedRoute user={user}>
                         <Messaging user={user} />
                     </ProtectedRoute>
                 } />
